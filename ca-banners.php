@@ -640,7 +640,10 @@ function banner_plugin_enqueue_styles() {
         }
     ';
     
-    wp_add_inline_style('wp-block-library', $css);
+    // Add styles directly to head
+    add_action('wp_head', function() use ($css) {
+        echo '<style type="text/css">' . $css . '</style>';
+    });
 }
 add_action('wp_enqueue_scripts', 'banner_plugin_enqueue_styles');
 add_action('wp_footer', 'banner_plugin_enqueue_scripts');
