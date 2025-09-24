@@ -63,34 +63,40 @@ jQuery(document).ready(function($) {
     // Initialize quick options
     updateQuickOptions();
     
-    // Conditional field logic
-    function updateConditionalFields() {
-        const sitewideToggle = document.getElementById('banner_sitewide');
-        const conditionalFields = document.querySelectorAll('.ca-banner-conditional-field[data-depends-on="banner_sitewide"]');
-        
-        if (sitewideToggle && conditionalFields.length > 0) {
-            const isSitewide = sitewideToggle.checked;
-            
-            conditionalFields.forEach(function(field) {
-                const showWhen = field.getAttribute('data-show-when');
-                const shouldShow = (showWhen === 'true' && isSitewide) || (showWhen === 'false' && !isSitewide);
-                
-                if (shouldShow) {
-                    field.classList.remove('hidden');
-                    field.classList.add('visible');
-                } else {
-                    field.classList.remove('visible');
-                    field.classList.add('hidden');
-                }
-            });
-        }
-    }
+// Conditional field logic
+function updateConditionalFields() {
+    const sitewideYes = document.getElementById('banner_sitewide_yes');
+    const sitewideNo = document.getElementById('banner_sitewide_no');
+    const conditionalFields = document.querySelectorAll('.ca-banner-conditional-field[data-depends-on="banner_sitewide"]');
     
-    // Add event listener for sitewide toggle
-    const sitewideToggle = document.getElementById('banner_sitewide');
-    if (sitewideToggle) {
-        sitewideToggle.addEventListener('change', updateConditionalFields);
+    if ((sitewideYes || sitewideNo) && conditionalFields.length > 0) {
+        const isSitewide = sitewideYes ? sitewideYes.checked : false;
+        
+        conditionalFields.forEach(function(field) {
+            const showWhen = field.getAttribute('data-show-when');
+            const shouldShow = (showWhen === 'true' && isSitewide) || (showWhen === 'false' && !isSitewide);
+            
+            if (shouldShow) {
+                field.classList.remove('hidden');
+                field.classList.add('visible');
+            } else {
+                field.classList.remove('visible');
+                field.classList.add('hidden');
+            }
+        });
     }
+}
+
+// Add event listeners for sitewide radio buttons
+const sitewideYes = document.getElementById('banner_sitewide_yes');
+const sitewideNo = document.getElementById('banner_sitewide_no');
+
+if (sitewideYes) {
+    sitewideYes.addEventListener('change', updateConditionalFields);
+}
+if (sitewideNo) {
+    sitewideNo.addEventListener('change', updateConditionalFields);
+}
     
     // Initial update
     updateConditionalFields();
@@ -106,6 +112,19 @@ jQuery(document).ready(function($) {
         const repeat = document.getElementById('banner_repeat')?.value || '10';
         const speed = document.getElementById('banner_speed')?.value || '120';
         
+        // Button settings
+        const buttonEnabled = document.querySelector('input[name="banner_plugin_settings[button_enabled]"]')?.checked || false;
+        const buttonText = document.querySelector('input[name="banner_plugin_settings[button_text]"]')?.value || '';
+        const buttonLink = document.querySelector('input[name="banner_plugin_settings[button_link]"]')?.value || '';
+        const buttonColor = document.querySelector('input[name="banner_plugin_settings[button_color]"]')?.value || '#ce7a31';
+        const buttonTextColor = document.querySelector('input[name="banner_plugin_settings[button_text_color]"]')?.value || '#ffffff';
+        const buttonBorderWidth = document.querySelector('input[name="banner_plugin_settings[button_border_width]"]')?.value || '0';
+        const buttonBorderColor = document.querySelector('input[name="banner_plugin_settings[button_border_color]"]')?.value || '#ce7a31';
+        const buttonBorderRadius = document.querySelector('input[name="banner_plugin_settings[button_border_radius]"]')?.value || '4';
+        const buttonPadding = document.querySelector('input[name="banner_plugin_settings[button_padding]"]')?.value || '8';
+        const buttonFontSize = document.querySelector('input[name="banner_plugin_settings[button_font_size]"]')?.value || '14';
+        const buttonFontWeight = document.querySelector('input[name="banner_plugin_settings[button_font_weight]"]')?.value || '600';
+        
         const previewContent = document.getElementById('ca-banner-preview-content');
         if (previewContent) {
             previewContent.style.backgroundColor = backgroundColor;
@@ -120,8 +139,28 @@ jQuery(document).ready(function($) {
                 repeatedMessage += message + ' &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ';
             }
             
-            // Create scrolling text element
-            previewContent.innerHTML = '<div class="ca-banner-preview-text" style="animation-duration: ' + speed + 's;">' + repeatedMessage + '</div>';
+            // Create preview content with message and button
+            let previewHTML = '<div class="ca-banner-preview-text" style="animation-duration: ' + speed + 's;">' + repeatedMessage + '</div>';
+            
+            // Add button if enabled
+            if (buttonEnabled && buttonText && buttonLink) {
+                previewHTML += '<a href="' + buttonLink + '" class="ca-banner-preview-button" style="' +
+                    'display: inline-block !important; ' +
+                    'background-color: ' + buttonColor + ' !important; ' +
+                    'color: ' + buttonTextColor + ' !important; ' +
+                    'border: ' + buttonBorderWidth + 'px solid ' + buttonBorderColor + ' !important; ' +
+                    'border-radius: ' + buttonBorderRadius + 'px !important; ' +
+                    'padding: ' + buttonPadding + 'px !important; ' +
+                    'font-size: ' + buttonFontSize + 'px !important; ' +
+                    'font-weight: ' + buttonFontWeight + ' !important; ' +
+                    'text-decoration: none !important; ' +
+                    'margin-left: 20px !important; ' +
+                    'white-space: nowrap !important; ' +
+                    'vertical-align: middle !important;' +
+                    '">' + buttonText + '</a>';
+            }
+            
+            previewContent.innerHTML = previewHTML;
         }
     }
     
@@ -137,8 +176,32 @@ jQuery(document).ready(function($) {
         'banner_speed'
     ];
     
+    // Add button field listeners
+    const buttonFields = [
+        'input[name="banner_plugin_settings[button_enabled]"]',
+        'input[name="banner_plugin_settings[button_text]"]',
+        'input[name="banner_plugin_settings[button_link]"]',
+        'input[name="banner_plugin_settings[button_color]"]',
+        'input[name="banner_plugin_settings[button_text_color]"]',
+        'input[name="banner_plugin_settings[button_border_width]"]',
+        'input[name="banner_plugin_settings[button_border_color]"]',
+        'input[name="banner_plugin_settings[button_border_radius]"]',
+        'input[name="banner_plugin_settings[button_padding]"]',
+        'input[name="banner_plugin_settings[button_font_size]"]',
+        'input[name="banner_plugin_settings[button_font_weight]"]'
+    ];
+    
     previewInputs.forEach(function(inputId) {
         const input = document.getElementById(inputId);
+        if (input) {
+            input.addEventListener('input', updatePreview);
+            input.addEventListener('change', updatePreview);
+        }
+    });
+    
+    // Add event listeners for button fields
+    buttonFields.forEach(function(selector) {
+        const input = document.querySelector(selector);
         if (input) {
             input.addEventListener('input', updatePreview);
             input.addEventListener('change', updatePreview);

@@ -244,33 +244,39 @@ class CA_Banners_Frontend {
                 // Create message container
                 var messageContainer = document.createElement("div");
                 messageContainer.className = "ca-banner-message";
-                messageContainer.innerHTML = caBannerConfig.message;
+                
+                // Create repeated message safely with HTML support
+                var message = caBannerConfig.message || '';
+                var repeat = Math.max(1, Math.min(100, caBannerConfig.repeat || 10));
+                var repeatedMessage = '';
+                for (var i = 0; i < repeat; i++) {
+                    repeatedMessage += message;
+                }
+                
+                // Add button to the repeated message if enabled
+                if (caBannerConfig.buttonEnabled && caBannerConfig.buttonText && caBannerConfig.buttonLink) {
+                    var buttonHTML = '<a href="' + caBannerConfig.buttonLink + '" class="ca-banner-button" style="' +
+                        'display: inline-block !important; ' +
+                        'background-color: ' + caBannerConfig.buttonColor + ' !important; ' +
+                        'color: ' + caBannerConfig.buttonTextColor + ' !important; ' +
+                        'border: ' + caBannerConfig.buttonBorderWidth + 'px solid ' + caBannerConfig.buttonBorderColor + ' !important; ' +
+                        'border-radius: ' + caBannerConfig.buttonBorderRadius + 'px !important; ' +
+                        'padding: ' + caBannerConfig.buttonPadding + 'px !important; ' +
+                        'font-size: ' + caBannerConfig.buttonFontSize + 'px !important; ' +
+                        'font-weight: ' + caBannerConfig.buttonFontWeight + ' !important; ' +
+                        'text-decoration: none !important; ' +
+                        'margin-left: 20px !important; ' +
+                        'white-space: nowrap !important; ' +
+                        'vertical-align: middle !important;' +
+                        '">' + caBannerConfig.buttonText + '</a>';
+                    
+                    repeatedMessage += buttonHTML;
+                }
+                
+                // Set HTML content to allow HTML/CSS styling
+                messageContainer.innerHTML = repeatedMessage;
                 
                 bannerContent.appendChild(messageContainer);
-                
-                // Add button if enabled
-                if (caBannerConfig.buttonEnabled && caBannerConfig.buttonText && caBannerConfig.buttonLink) {
-                    var button = document.createElement("a");
-                    button.href = caBannerConfig.buttonLink;
-                    button.className = "ca-banner-button";
-                    button.textContent = caBannerConfig.buttonText;
-                    button.style.cssText = [
-                        'display: inline-block !important',
-                        'background-color: ' + caBannerConfig.buttonColor + ' !important',
-                        'color: ' + caBannerConfig.buttonTextColor + ' !important',
-                        'border: ' + caBannerConfig.buttonBorderWidth + 'px solid ' + caBannerConfig.buttonBorderColor + ' !important',
-                        'border-radius: ' + caBannerConfig.buttonBorderRadius + 'px !important',
-                        'padding: ' + caBannerConfig.buttonPadding + 'px !important',
-                        'font-size: ' + caBannerConfig.buttonFontSize + 'px !important',
-                        'font-weight: ' + caBannerConfig.buttonFontWeight + ' !important',
-                        'text-decoration: none !important',
-                        'margin-left: 20px !important',
-                        'white-space: nowrap !important',
-                        'vertical-align: middle !important'
-                    ].join('; ');
-                    
-                    bannerContent.appendChild(button);
-                }
                 
                 // Apply inline styles
                 banner.style.cssText = [
@@ -298,13 +304,16 @@ class CA_Banners_Frontend {
                 bannerContent.style.margin = '0';
                 bannerContent.style.padding = '0';
                 
-                // Add CSS animation
-                if (!document.querySelector('#ca-banner-animation-style')) {
-                    var style = document.createElement('style');
-                    style.id = 'ca-banner-animation-style';
-                    style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } } .ca-banner-message { animation: ca-banner-marquee ' + caBannerConfig.speed + 's linear infinite !important; }';
-                    document.head.appendChild(style);
+                // Add or update CSS animation
+                var existingStyle = document.querySelector('#ca-banner-animation-style');
+                if (existingStyle) {
+                    existingStyle.remove();
                 }
+                
+                var style = document.createElement('style');
+                style.id = 'ca-banner-animation-style';
+                style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } } .ca-banner-message { animation: ca-banner-marquee ' + caBannerConfig.speed + 's linear infinite !important; }';
+                document.head.appendChild(style);
                 
                 banner.appendChild(bannerContent);
                 
@@ -439,33 +448,29 @@ class CA_Banners_Frontend {
                         repeatedMessage += message;
                     }
                     
+                    // Add button to the repeated message if enabled
+                    if (config.buttonEnabled && config.buttonText && config.buttonLink) {
+                        var buttonHTML = '<a href="' + config.buttonLink + '" class="ca-banner-button" style="' +
+                            'display: inline-block !important; ' +
+                            'background-color: ' + (config.buttonColor || '#ce7a31') + ' !important; ' +
+                            'color: ' + (config.buttonTextColor || '#ffffff') + ' !important; ' +
+                            'border: ' + (config.buttonBorderWidth || 0) + 'px solid ' + (config.buttonBorderColor || '#ce7a31') + ' !important; ' +
+                            'border-radius: ' + (config.buttonBorderRadius || 4) + 'px !important; ' +
+                            'padding: ' + (config.buttonPadding || 8) + 'px !important; ' +
+                            'font-size: ' + (config.buttonFontSize || 14) + 'px !important; ' +
+                            'font-weight: ' + (config.buttonFontWeight || '600') + ' !important; ' +
+                            'text-decoration: none !important; ' +
+                            'margin-left: 20px !important; ' +
+                            'white-space: nowrap !important; ' +
+                            'vertical-align: middle !important;' +
+                            '">' + config.buttonText + '</a>';
+                        
+                        repeatedMessage += buttonHTML;
+                    }
+                    
                     // Set HTML content to allow HTML/CSS styling
                     messageContainer.innerHTML = repeatedMessage;
                     bannerContent.appendChild(messageContainer);
-                    
-                    // Add button if enabled
-                    if (config.buttonEnabled && config.buttonText && config.buttonLink) {
-                        var button = document.createElement("a");
-                        button.href = config.buttonLink;
-                        button.className = "ca-banner-button";
-                        button.textContent = config.buttonText;
-                        button.style.cssText = [
-                            'display: inline-block !important',
-                            'background-color: ' + (config.buttonColor || '#ce7a31') + ' !important',
-                            'color: ' + (config.buttonTextColor || '#ffffff') + ' !important',
-                            'border: ' + (config.buttonBorderWidth || 0) + 'px solid ' + (config.buttonBorderColor || '#ce7a31') + ' !important',
-                            'border-radius: ' + (config.buttonBorderRadius || 4) + 'px !important',
-                            'padding: ' + (config.buttonPadding || 8) + 'px !important',
-                            'font-size: ' + (config.buttonFontSize || 14) + 'px !important',
-                            'font-weight: ' + (config.buttonFontWeight || '600') + ' !important',
-                            'text-decoration: none !important',
-                            'margin-left: 20px !important',
-                            'white-space: nowrap !important',
-                            'vertical-align: middle !important'
-                        ].join('; ');
-                        
-                        bannerContent.appendChild(button);
-                    }
 
                     // Apply inline styles for maximum compatibility
                     banner.style.cssText = [
@@ -494,21 +499,24 @@ class CA_Banners_Frontend {
                     bannerContent.style.margin = '0';
                     bannerContent.style.padding = '0';
                     
-                    // Create and add CSS animation dynamically (only if not already added)
-                    if (!document.querySelector('#ca-banner-animation-style')) {
-                        var style = document.createElement('style');
-                        style.id = 'ca-banner-animation-style';
-                        style.textContent = `
-                            @keyframes ca-banner-marquee {
-                                0% { transform: translateX(0%); }
-                                100% { transform: translateX(-100%); }
-                            }
-                            .ca-banner-message {
-                                animation: ca-banner-marquee ' + (config.speed || 120) + 's linear infinite !important;
-                            }
-                        `;
-                        document.head.appendChild(style);
+                    // Create and add CSS animation dynamically (update each time)
+                    var existingStyle = document.querySelector('#ca-banner-animation-style');
+                    if (existingStyle) {
+                        existingStyle.remove();
                     }
+                    
+                    var style = document.createElement('style');
+                    style.id = 'ca-banner-animation-style';
+                    style.textContent = `
+                        @keyframes ca-banner-marquee {
+                            0% { transform: translateX(0%); }
+                            100% { transform: translateX(-100%); }
+                        }
+                        .ca-banner-message {
+                            animation: ca-banner-marquee ' + (config.speed || 120) + 's linear infinite !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
                     
                     // Add animation class
                     bannerContent.classList.add('ca-banner-content');

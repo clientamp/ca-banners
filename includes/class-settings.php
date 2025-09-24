@@ -410,13 +410,15 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $sitewide = $settings['sitewide'];
         
+        echo '<div class="ca-banner-form-group">';
         echo '<fieldset>';
-        echo '<label><input type="radio" name="' . self::OPTION_NAME . '[sitewide]" value="1"' . checked(1, $sitewide, false) . '> Display sitewide (all pages)</label><br>';
-        echo '<label><input type="radio" name="' . self::OPTION_NAME . '[sitewide]" value="0"' . checked(0, $sitewide, false) . '> Display on specific pages only</label>';
+        echo '<label><input type="radio" name="' . self::OPTION_NAME . '[sitewide]" id="banner_sitewide_yes" value="1"' . checked(1, $sitewide, false) . '> Display sitewide (all pages)</label><br>';
+        echo '<label><input type="radio" name="' . self::OPTION_NAME . '[sitewide]" id="banner_sitewide_no" value="0"' . checked(0, $sitewide, false) . '> Display on specific pages only</label>';
         echo '</fieldset>';
         echo '<p class="description"><strong>Choose how you want to control banner visibility:</strong><br>';
         echo '• <strong>Sitewide:</strong> Banner appears on all pages except those you exclude<br>';
         echo '• <strong>Specific pages:</strong> Banner only appears on pages you specify</p>';
+        echo '</div>';
     }
     
     public function urls_callback() {
@@ -501,11 +503,12 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $disable_mobile = $settings['disable_mobile'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label>';
-        echo '<input type="checkbox" name="' . self::OPTION_NAME . '[disable_mobile]" value="1"' . checked(1, $disable_mobile, false) . '> ';
-        echo 'Disable banner on mobile devices';
-        echo '</label>';
-        echo '<p class="description">Check this box to hide the banner on mobile devices (screen width less than 768px).</p>';
+        echo '<div class="ca-banner-toggle">';
+        echo '<input type="checkbox" name="' . self::OPTION_NAME . '[disable_mobile]" id="banner_disable_mobile" value="1"' . checked(1, $disable_mobile, false) . '>';
+        echo '<label for="banner_disable_mobile" class="ca-banner-toggle-slider"></label>';
+        echo '<span class="ca-banner-toggle-label">' . ($disable_mobile ? 'Disabled on Mobile' : 'Enabled on Mobile') . '</span>';
+        echo '</div>';
+        echo '<p class="description">Hide the banner on mobile devices (screens smaller than 768px wide).</p>';
         echo '</div>';
     }
     

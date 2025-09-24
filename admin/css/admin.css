@@ -126,6 +126,40 @@
     line-height: 1.4;
 }
 
+/* Radio Button Styling */
+.ca-banner-form-group fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ca-banner-form-group fieldset label {
+    display: block;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: normal;
+}
+
+.ca-banner-form-group fieldset label:hover {
+    background: #f0f0f1;
+    border-color: #8c8f94;
+}
+
+.ca-banner-form-group fieldset label:has(input:checked) {
+    background: #2271b1;
+    color: #fff;
+    border-color: #2271b1;
+}
+
+.ca-banner-form-group fieldset input[type="radio"] {
+    margin-right: 8px;
+}
+
 .ca-banner-textarea {
     width: 100%;
     max-width: 600px;
@@ -243,8 +277,10 @@
     border-radius: 4px;
     padding: 20px;
     margin-top: 20px;
-    position: relative;
-    overflow: hidden;
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ca-banner-preview-label {
@@ -343,6 +379,9 @@
 .ca-banner-conditional-field {
     transition: opacity 0.3s ease, max-height 0.3s ease;
     overflow: hidden;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
 }
 
 .ca-banner-conditional-field.hidden {
@@ -350,6 +389,7 @@
     max-height: 0;
     margin: 0;
     padding: 0;
+    border-top: none;
 }
 
 .ca-banner-conditional-field.visible {
