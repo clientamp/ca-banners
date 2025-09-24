@@ -933,7 +933,7 @@ function banner_plugin_enqueue_scripts() {
         echo 'Include URLs: [' . esc_html(implode(', ', $include_urls_array)) . '], ';
         echo 'Exclude URLs: [' . esc_html(implode(', ', $exclude_urls_array)) . '], ';
         echo 'Should Display: ' . ($should_display ? 'Yes' : 'No') . ', ';
-        echo 'Enabled: ' . ($enabled ? 'Yes' : 'No') . ', ';
+        echo 'Enabled: ' . ($validated_settings['enabled'] ? 'Yes' : 'No') . ', ';
         echo 'Message Length: ' . strlen($message) . ' chars';
         echo ' -->';
     }
@@ -944,7 +944,7 @@ function banner_plugin_enqueue_scripts() {
 
     echo '<script>';
     echo 'var caBannerConfig = {';
-    echo 'message: \'' . addslashes($message) . ' &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; \',';
+    echo 'message: ' . json_encode($message . ' &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ') . ',';
     echo 'repeat: ' . intval($repeat) . ',';
     echo 'backgroundColor: "' . esc_js($background_color) . '",';
     echo 'textColor: "' . esc_js($text_color) . '",';
