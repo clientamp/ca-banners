@@ -116,8 +116,8 @@ class CA_Banners_Settings {
         add_settings_field('banner_start_date', 'Banner Start Date', array($this, 'start_date_callback'), 'banner-plugin', 'banner_scheduling_section');
         add_settings_field('banner_end_date', 'Banner End Date', array($this, 'end_date_callback'), 'banner-plugin', 'banner_scheduling_section');
 
-        // Image Banner Settings Section
-        add_settings_section('banner_image_section', 'Image Banner Settings', array($this, 'image_section_callback'), 'banner-plugin');
+        // Static Image Banner Settings Section
+        add_settings_section('banner_image_section', 'Static Image Banner Settings', array($this, 'image_section_callback'), 'banner-plugin');
         add_settings_field('banner_image', 'Banner Image', array($this, 'image_callback'), 'banner-plugin', 'banner_image_section');
         add_settings_field('banner_image_start_date', 'Image Start Date', array($this, 'image_start_date_callback'), 'banner-plugin', 'banner_image_section');
         add_settings_field('banner_image_end_date', 'Image End Date', array($this, 'image_end_date_callback'), 'banner-plugin', 'banner_image_section');
@@ -195,7 +195,14 @@ class CA_Banners_Settings {
     }
     
     public function image_section_callback() {
-        echo '<p>Add an image banner with its own scheduling separate from the text banner.</p>';
+        echo '<p><strong>Static Image Banner:</strong> Display a full-width promotional image at the top of your pages, separate from the scrolling text banner. Perfect for announcements, promotions, or seasonal campaigns.</p>';
+        echo '<p><strong>Key Features:</strong></p>';
+        echo '<ul style="margin: 10px 0; padding-left: 20px;">';
+        echo '<li>Full-width image display at the top of pages</li>';
+        echo '<li>Independent scheduling from the text banner</li>';
+        echo '<li>Appears above the scrolling text banner</li>';
+        echo '<li>Perfect for promotional campaigns and announcements</li>';
+        echo '</ul>';
     }
     
     /**
@@ -526,10 +533,9 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $image = $settings['image'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_image">Banner Image</label>';
-        echo '<input type="text" name="' . self::OPTION_NAME . '[image]" id="banner_image" class="ca-banner-input" value="' . esc_attr($image) . '">';
+        echo '<input type="text" name="' . self::OPTION_NAME . '[image]" id="banner_image" class="ca-banner-input" value="' . esc_attr($image) . '" placeholder="https://example.com/promotional-image.jpg">';
         echo '<input type="button" class="button button-secondary" value="Upload Image" id="upload_image_button">';
-        echo '<p class="description">Enter an image URL or use the upload button to select an image from your media library.</p>';
+        echo '<p class="description"><strong>Static Image URL:</strong> Enter the URL of your promotional image or use the upload button to select from your media library. This image will display as a full-width banner at the top of your pages.</p>';
         echo '</div>';
     }
     
@@ -537,9 +543,8 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $image_start_date = $settings['image_start_date'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_image_start_date">Image Start Date</label>';
         echo '<input type="datetime-local" name="' . self::OPTION_NAME . '[image_start_date]" id="banner_image_start_date" class="ca-banner-input" value="' . esc_attr($image_start_date) . '">';
-        echo '<p class="description">Set when the image banner should start displaying. Leave empty to start immediately.</p>';
+        echo '<p class="description"><strong>Static Image Start Date:</strong> Set when the static image banner should start displaying. This is independent from the text banner scheduling. Leave empty to start immediately.</p>';
         echo '</div>';
     }
     
@@ -547,9 +552,8 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $image_end_date = $settings['image_end_date'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_image_end_date">Image End Date</label>';
         echo '<input type="datetime-local" name="' . self::OPTION_NAME . '[image_end_date]" id="banner_image_end_date" class="ca-banner-input" value="' . esc_attr($image_end_date) . '">';
-        echo '<p class="description">Set when the image banner should stop displaying. Leave empty to display indefinitely.</p>';
+        echo '<p class="description"><strong>Static Image End Date:</strong> Set when the static image banner should stop displaying. This is independent from the text banner scheduling. Leave empty to display indefinitely.</p>';
         echo '</div>';
     }
     

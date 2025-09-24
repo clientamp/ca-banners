@@ -124,13 +124,13 @@ class CA_Banners_Admin {
                     </div>
                 </div>
                 
-                <!-- Image Banner Settings Card -->
+                <!-- Static Image Banner Settings Card -->
                 <div class="ca-banner-card">
                     <div class="ca-banner-card-header">
                         <svg class="ca-banner-card-icon" viewBox="0 0 24 24">
                             <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                         </svg>
-                        <h2 class="ca-banner-card-title">Image Banner Settings</h2>
+                        <h2 class="ca-banner-card-title">Static Image Banner Settings</h2>
                     </div>
                     <div class="ca-banner-card-content">
                         <?php do_settings_fields('banner-plugin', 'banner_image_section'); ?>
