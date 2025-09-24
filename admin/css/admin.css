@@ -325,10 +325,30 @@
     min-width: 30px;
 }
 
-/* Live Preview */
+/* Live Preview - Sticky */
 .ca-banner-preview {
-    margin-top: 20px;
+    position: sticky;
+    top: 40px; /* WordPress admin bar height + margin */
+    background: #fff;
+    border: 2px solid #2271b1;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     z-index: 100;
+    padding: 16px;
+    margin: 20px 0;
+    animation: slideInFromTop 0.3s ease-out;
+    transition: all 0.3s ease;
+}
+
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .ca-banner-preview-label {
@@ -527,6 +547,22 @@
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+    .ca-banner-admin-wrap {
+        margin-right: 0; /* Remove right margin on smaller screens */
+    }
+    
+    .ca-banner-preview {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: 100%;
+        max-width: none;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
 @media (max-width: 782px) {
     .ca-banner-card-content {
         padding: 16px;
@@ -543,6 +579,10 @@
     .ca-banner-form-group .wp-editor-wrap .wp-switch-editor {
         padding: 6px 10px;
         font-size: 12px;
+    }
+    
+    .ca-banner-preview {
+        padding: 12px;
     }
 }
 
