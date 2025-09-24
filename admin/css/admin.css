@@ -266,22 +266,21 @@
     overflow: hidden;
     white-space: nowrap;
     position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
 }
 
-.ca-banner-preview-content::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
-    animation: ca-banner-preview-shimmer 2s infinite;
+.ca-banner-preview-text {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ca-banner-preview-scroll 15s linear infinite;
+    padding-right: 20px;
 }
 
-@keyframes ca-banner-preview-shimmer {
-    0% { left: -100%; }
-    100% { left: 100%; }
+@keyframes ca-banner-preview-scroll {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
 }
 
 /* Rich Text Editor Styling */

@@ -12,6 +12,8 @@ jQuery(document).ready(function($) {
         const textColor = document.getElementById('banner_text_color')?.value || '#000000';
         const fontSize = document.getElementById('banner_font_size')?.value || '16';
         const fontFamily = document.getElementById('banner_font_family')?.value || 'Arial';
+        const fontWeight = document.getElementById('banner_font_weight')?.value || '600';
+        const repeat = document.getElementById('banner_repeat')?.value || '10';
         
         const previewContent = document.getElementById('ca-banner-preview-content');
         if (previewContent) {
@@ -19,7 +21,16 @@ jQuery(document).ready(function($) {
             previewContent.style.color = textColor;
             previewContent.style.fontSize = fontSize + 'px';
             previewContent.style.fontFamily = fontFamily;
-            previewContent.innerHTML = message;
+            previewContent.style.fontWeight = fontWeight;
+            
+            // Create repeated message for preview
+            let repeatedMessage = '';
+            for (let i = 0; i < Math.min(parseInt(repeat), 5); i++) { // Limit to 5 repeats for preview
+                repeatedMessage += message + ' &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ';
+            }
+            
+            // Create scrolling text element
+            previewContent.innerHTML = '<div class="ca-banner-preview-text">' + repeatedMessage + '</div>';
         }
     }
     
@@ -29,7 +40,9 @@ jQuery(document).ready(function($) {
         'banner_background_color', 
         'banner_text_color',
         'banner_font_size',
-        'banner_font_family'
+        'banner_font_family',
+        'banner_font_weight',
+        'banner_repeat'
     ];
     
     previewInputs.forEach(function(inputId) {
