@@ -31,7 +31,7 @@ class CA_Banners_Validator {
             $sanitized[$field] = isset($input[$field]) ? (bool) $input[$field] : false;
         }
         
-        // Text fields - Allow HTML for banner message
+        // Text fields - Allow HTML for banner message (from rich text editor)
         $sanitized['message'] = isset($input['message']) ? wp_kses_post($input['message']) : '';
         $sanitized['urls'] = isset($input['urls']) ? sanitize_textarea_field($input['urls']) : '';
         $sanitized['exclude_urls'] = isset($input['exclude_urls']) ? sanitize_textarea_field($input['exclude_urls']) : '';

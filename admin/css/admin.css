@@ -284,6 +284,89 @@
     100% { left: 100%; }
 }
 
+/* Rich Text Editor Styling */
+.ca-banner-form-group .wp-editor-wrap {
+    margin-top: 8px;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-editor-container {
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-editor-container textarea {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-editor-tabs {
+    background: #f6f7f7;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-switch-editor {
+    background: #f6f7f7;
+    border: none;
+    color: #50575e;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-switch-editor:hover {
+    background: #e0e0e0;
+    color: #000;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-switch-editor.wp-switch-editor-html {
+    border-right: 1px solid #c3c4c7;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-switch-editor.wp-switch-editor-tmce {
+    border-left: 1px solid #c3c4c7;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-switch-editor.switch-tmce {
+    background: #fff;
+    color: #000;
+}
+
+.ca-banner-form-group .wp-editor-wrap .wp-switch-editor.switch-html {
+    background: #f6f7f7;
+    color: #50575e;
+}
+
+/* TinyMCE Editor Customization */
+.ca-banner-form-group .mce-toolbar {
+    background: #f6f7f7 !important;
+    border-bottom: 1px solid #c3c4c7 !important;
+}
+
+.ca-banner-form-group .mce-toolbar .mce-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #50575e !important;
+}
+
+.ca-banner-form-group .mce-toolbar .mce-btn:hover {
+    background: #e0e0e0 !important;
+    color: #000 !important;
+}
+
+.ca-banner-form-group .mce-toolbar .mce-btn.mce-active {
+    background: #0073aa !important;
+    color: #fff !important;
+}
+
+.ca-banner-form-group .mce-edit-area {
+    border: none !important;
+}
+
+.ca-banner-form-group .mce-edit-area iframe {
+    border: none !important;
+}
+
 /* Responsive */
 @media (max-width: 782px) {
     .ca-banner-card-content {
@@ -292,5 +375,14 @@
     
     .ca-banner-form-group {
         margin-bottom: 16px;
+    }
+    
+    .ca-banner-form-group .wp-editor-wrap {
+        margin-top: 5px;
+    }
+    
+    .ca-banner-form-group .wp-editor-wrap .wp-switch-editor {
+        padding: 6px 10px;
+        font-size: 12px;
     }
 }

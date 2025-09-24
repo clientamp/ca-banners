@@ -204,8 +204,34 @@ class CA_Banners_Settings {
         $message = $settings['message'];
         echo '<div class="ca-banner-form-group">';
         echo '<label for="banner_message">Banner Message</label>';
-        echo '<textarea name="' . self::OPTION_NAME . '[message]" id="banner_message" class="ca-banner-textarea" rows="4" placeholder="Enter your banner message here...">' . esc_html($message) . '</textarea>';
-        echo '<p class="description">Enter the text you want to display in your scrolling banner. This message will repeat across the banner.<br><strong>HTML/CSS Support:</strong> You can use HTML tags and inline CSS styles for formatting. Examples: <code>&lt;strong&gt;Bold text&lt;/strong&gt;</code>, <code>&lt;span style="color: red;"&gt;Red text&lt;/span&gt;</code>, <code>&lt;em&gt;Italic text&lt;/em&gt;</code></p>';
+        
+        // Use WordPress editor instead of textarea
+        wp_editor($message, 'banner_message', array(
+            'textarea_name' => self::OPTION_NAME . '[message]',
+            'textarea_rows' => 4,
+            'media_buttons' => false, // Disable media buttons for banner
+            'teeny' => true, // Use minimal editor
+            'tinymce' => array(
+                'toolbar1' => 'bold,italic,underline,|,forecolor,|,link,unlink,|,undo,redo',
+                'toolbar2' => '',
+                'toolbar3' => '',
+                'toolbar4' => '',
+                'menubar' => false,
+                'statusbar' => false,
+                'resize' => false,
+                'height' => 120,
+                'setup' => 'function(ed) {
+                    ed.on("change", function() {
+                        ed.save();
+                    });
+                }'
+            ),
+            'quicktags' => array(
+                'buttons' => 'strong,em,link,del'
+            )
+        ));
+        
+        echo '<p class="description">Enter the text you want to display in your scrolling banner. This message will repeat across the banner.<br><strong>Rich Text Editor:</strong> Use the formatting buttons above to style your text. You can make text <strong>bold</strong>, <em>italic</em>, change colors, and add links.</p>';
         echo '</div>';
     }
     
