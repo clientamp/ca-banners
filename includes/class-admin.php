@@ -111,6 +111,19 @@ class CA_Banners_Admin {
                     </div>
                 </div>
                 
+                <!-- Button Settings Card -->
+                <div class="ca-banner-card">
+                    <div class="ca-banner-card-header">
+                        <svg class="ca-banner-card-icon" viewBox="0 0 24 24">
+                            <path d="M19 7h-8v6h8V7zm-2 4h-4V9h4v2zm4-12H3C1.9 3 1 3.9 1 5v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+                        </svg>
+                        <h2 class="ca-banner-card-title">Button Settings</h2>
+                    </div>
+                    <div class="ca-banner-card-content">
+                        <?php do_settings_fields('banner-plugin', 'banner_button_section'); ?>
+                    </div>
+                </div>
+                
                 <!-- Image Banner Settings Card -->
                 <div class="ca-banner-card">
                     <div class="ca-banner-card-header">

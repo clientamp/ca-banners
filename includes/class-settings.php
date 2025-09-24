@@ -97,6 +97,20 @@ class CA_Banners_Settings {
         add_settings_field('banner_border_style', 'Border Style', array($this, 'border_style_callback'), 'banner-plugin', 'banner_styling_section');
         add_settings_field('banner_border_color', 'Border Color', array($this, 'border_color_callback'), 'banner-plugin', 'banner_styling_section');
 
+        // Button Settings Section
+        add_settings_section('banner_button_section', 'Button Settings', array($this, 'button_section_callback'), 'banner-plugin');
+        add_settings_field('banner_button_enabled', 'Enable Button', array($this, 'button_enabled_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_text', 'Button Text', array($this, 'button_text_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_link', 'Button Link', array($this, 'button_link_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_color', 'Button Color', array($this, 'button_color_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_text_color', 'Button Text Color', array($this, 'button_text_color_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_border_width', 'Button Border Width', array($this, 'button_border_width_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_border_color', 'Button Border Color', array($this, 'button_border_color_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_border_radius', 'Button Border Radius', array($this, 'button_border_radius_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_padding', 'Button Padding', array($this, 'button_padding_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_font_size', 'Button Font Size', array($this, 'button_font_size_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_field('banner_button_font_weight', 'Button Font Weight', array($this, 'button_font_weight_callback'), 'banner-plugin', 'banner_button_section');
+
         // Scheduling Settings Section
         add_settings_section('banner_scheduling_section', 'Scheduling Settings', array($this, 'scheduling_section_callback'), 'banner-plugin');
         add_settings_field('banner_start_date', 'Banner Start Date', array($this, 'start_date_callback'), 'banner-plugin', 'banner_scheduling_section');
@@ -478,6 +492,141 @@ class CA_Banners_Settings {
         echo '<label for="banner_image_end_date">Image End Date</label>';
         echo '<input type="datetime-local" name="' . self::OPTION_NAME . '[image_end_date]" id="banner_image_end_date" class="ca-banner-input" value="' . esc_attr($image_end_date) . '">';
         echo '<p class="description">Set when the image banner should stop displaying. Leave empty to display indefinitely.</p>';
+        echo '</div>';
+    }
+    
+    // Button Settings Callbacks
+    public function button_section_callback() {
+        echo '<p>Configure the call-to-action button that appears in your banner.</p>';
+    }
+    
+    public function button_enabled_callback() {
+        $settings = $this->get_settings();
+        $button_enabled = $settings['button_enabled'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div class="ca-banner-toggle">';
+        echo '<input type="checkbox" name="' . self::OPTION_NAME . '[button_enabled]" id="banner_button_enabled" value="1"' . checked(1, $button_enabled, false) . '>';
+        echo '<label for="banner_button_enabled" class="ca-banner-toggle-slider"></label>';
+        echo '<span class="ca-banner-toggle-label">' . ($button_enabled ? 'Enabled' : 'Disabled') . '</span>';
+        echo '</div>';
+        echo '<p class="description">Enable or disable the call-to-action button in your banner.</p>';
+        echo '</div>';
+    }
+    
+    public function button_text_callback() {
+        $settings = $this->get_settings();
+        $button_text = $settings['button_text'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<input type="text" name="' . self::OPTION_NAME . '[button_text]" id="banner_button_text" class="ca-banner-input" value="' . esc_attr($button_text) . '" placeholder="e.g., Learn More, Shop Now, Get Started">';
+        echo '<p class="description">Enter the text that will appear on the button.</p>';
+        echo '</div>';
+    }
+    
+    public function button_link_callback() {
+        $settings = $this->get_settings();
+        $button_link = $settings['button_link'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<input type="url" name="' . self::OPTION_NAME . '[button_link]" id="banner_button_link" class="ca-banner-input" value="' . esc_attr($button_link) . '" placeholder="https://example.com">';
+        echo '<p class="description">Enter the URL where the button should link to.</p>';
+        echo '</div>';
+    }
+    
+    public function button_color_callback() {
+        $settings = $this->get_settings();
+        $button_color = $settings['button_color'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<input type="color" name="' . self::OPTION_NAME . '[button_color]" id="banner_button_color" class="ca-banner-color-picker" value="' . esc_attr($button_color) . '">';
+        echo '<p class="description">Choose the background color for your button.</p>';
+        echo '</div>';
+    }
+    
+    public function button_text_color_callback() {
+        $settings = $this->get_settings();
+        $button_text_color = $settings['button_text_color'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<input type="color" name="' . self::OPTION_NAME . '[button_text_color]" id="banner_button_text_color" class="ca-banner-color-picker" value="' . esc_attr($button_text_color) . '">';
+        echo '<p class="description">Choose the text color for your button.</p>';
+        echo '</div>';
+    }
+    
+    public function button_border_width_callback() {
+        $settings = $this->get_settings();
+        $button_border_width = $settings['button_border_width'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[button_border_width]" id="banner_button_border_width" class="ca-banner-range" value="' . esc_attr($button_border_width) . '" min="0" max="10" oninput="document.getElementById(\'button-border-width-value\').textContent = this.value + \'px\'">';
+        echo '<span class="ca-banner-range-value" id="button-border-width-value">' . esc_attr($button_border_width) . 'px</span>';
+        echo '</div>';
+        echo '<p class="description">Set the border width for your button (0-10px).</p>';
+        echo '</div>';
+    }
+    
+    public function button_border_color_callback() {
+        $settings = $this->get_settings();
+        $button_border_color = $settings['button_border_color'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<input type="color" name="' . self::OPTION_NAME . '[button_border_color]" id="banner_button_border_color" class="ca-banner-color-picker" value="' . esc_attr($button_border_color) . '">';
+        echo '<p class="description">Choose the border color for your button.</p>';
+        echo '</div>';
+    }
+    
+    public function button_border_radius_callback() {
+        $settings = $this->get_settings();
+        $button_border_radius = $settings['button_border_radius'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[button_border_radius]" id="banner_button_border_radius" class="ca-banner-range" value="' . esc_attr($button_border_radius) . '" min="0" max="50" oninput="document.getElementById(\'button-border-radius-value\').textContent = this.value + \'px\'">';
+        echo '<span class="ca-banner-range-value" id="button-border-radius-value">' . esc_attr($button_border_radius) . 'px</span>';
+        echo '</div>';
+        echo '<p class="description">Set the border radius for your button (0-50px). Higher values create more rounded corners.</p>';
+        echo '</div>';
+    }
+    
+    public function button_padding_callback() {
+        $settings = $this->get_settings();
+        $button_padding = $settings['button_padding'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[button_padding]" id="banner_button_padding" class="ca-banner-range" value="' . esc_attr($button_padding) . '" min="0" max="50" oninput="document.getElementById(\'button-padding-value\').textContent = this.value + \'px\'">';
+        echo '<span class="ca-banner-range-value" id="button-padding-value">' . esc_attr($button_padding) . 'px</span>';
+        echo '</div>';
+        echo '<p class="description">Set the internal padding for your button (0-50px).</p>';
+        echo '</div>';
+    }
+    
+    public function button_font_size_callback() {
+        $settings = $this->get_settings();
+        $button_font_size = $settings['button_font_size'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[button_font_size]" id="banner_button_font_size" class="ca-banner-range" value="' . esc_attr($button_font_size) . '" min="8" max="24" oninput="document.getElementById(\'button-font-size-value\').textContent = this.value + \'px\'">';
+        echo '<span class="ca-banner-range-value" id="button-font-size-value">' . esc_attr($button_font_size) . 'px</span>';
+        echo '</div>';
+        echo '<p class="description">Adjust the font size for your button text (8-24px).</p>';
+        echo '</div>';
+    }
+    
+    public function button_font_weight_callback() {
+        $settings = $this->get_settings();
+        $button_font_weight = $settings['button_font_weight'];
+        $weight_options = array(
+            '300' => 'Light (300)',
+            '400' => 'Normal (400)',
+            '500' => 'Medium (500)',
+            '600' => 'Semi Bold (600)',
+            '700' => 'Bold (700)',
+            '800' => 'Extra Bold (800)',
+            '900' => 'Black (900)'
+        );
+
+        echo '<div class="ca-banner-form-group">';
+        echo '<select name="' . self::OPTION_NAME . '[button_font_weight]" id="banner_button_font_weight" class="ca-banner-select">';
+        foreach ($weight_options as $value => $label) {
+            $selected = ($button_font_weight === $value) ? 'selected' : '';
+            echo '<option value="' . esc_attr($value) . '" ' . $selected . '>' . $label . '</option>';
+        }
+        echo '</select>';
+        echo '<p class="description">Choose the font weight for your button text.</p>';
         echo '</div>';
     }
 }
