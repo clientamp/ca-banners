@@ -415,8 +415,7 @@ class CA_Banners_Settings {
     public function urls_callback() {
         $settings = $this->get_settings();
         $urls = $settings['urls'];
-        echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_urls">Display on Pages</label>';
+        echo '<div class="ca-banner-form-group ca-banner-conditional-field" data-depends-on="banner_sitewide" data-show-when="false">';
         echo '<textarea name="' . self::OPTION_NAME . '[urls]" id="banner_urls" class="ca-banner-textarea" rows="4" placeholder="/about-us/&#10;/contact/&#10;/products/">' . esc_textarea($urls) . '</textarea>';
         echo '<p class="description"><strong>Include Pages:</strong> Enter one URL per line to display the banner on specific pages. Use relative URLs like <code>/about-us/</code> or <code>/contact/</code>. Leave empty to show on all pages when not using sitewide mode.</p>';
         echo '</div>';
@@ -425,8 +424,7 @@ class CA_Banners_Settings {
     public function exclude_urls_callback() {
         $settings = $this->get_settings();
         $exclude_urls = $settings['exclude_urls'];
-        echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_exclude_urls">Exclude on Pages</label>';
+        echo '<div class="ca-banner-form-group ca-banner-conditional-field" data-depends-on="banner_sitewide" data-show-when="false">';
         echo '<textarea name="' . self::OPTION_NAME . '[exclude_urls]" id="banner_exclude_urls" class="ca-banner-textarea" rows="4" placeholder="/checkout/&#10;/cart/&#10;/admin/">' . esc_textarea($exclude_urls) . '</textarea>';
         echo '<p class="description"><strong>Exclude Pages:</strong> Enter one URL per line to exclude the banner from specific pages. Use relative URLs like <code>/checkout/</code> or <code>/cart/</code>. Works with both sitewide and specific page modes.</p>';
         echo '</div>';

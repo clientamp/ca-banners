@@ -283,6 +283,24 @@
     100% { transform: translateX(-100%); }
 }
 
+/* Conditional Fields */
+.ca-banner-conditional-field {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    overflow: hidden;
+}
+
+.ca-banner-conditional-field.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.ca-banner-conditional-field.visible {
+    opacity: 1;
+    max-height: 1000px;
+}
+
 /* Rich Text Editor Styling */
 .ca-banner-form-group .wp-editor-wrap {
     margin-top: 8px;

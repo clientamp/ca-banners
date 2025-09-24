@@ -5,6 +5,38 @@
 jQuery(document).ready(function($) {
     'use strict';
     
+    // Conditional field logic
+    function updateConditionalFields() {
+        const sitewideToggle = document.getElementById('banner_sitewide');
+        const conditionalFields = document.querySelectorAll('.ca-banner-conditional-field[data-depends-on="banner_sitewide"]');
+        
+        if (sitewideToggle && conditionalFields.length > 0) {
+            const isSitewide = sitewideToggle.checked;
+            
+            conditionalFields.forEach(function(field) {
+                const showWhen = field.getAttribute('data-show-when');
+                const shouldShow = (showWhen === 'true' && isSitewide) || (showWhen === 'false' && !isSitewide);
+                
+                if (shouldShow) {
+                    field.classList.remove('hidden');
+                    field.classList.add('visible');
+                } else {
+                    field.classList.remove('visible');
+                    field.classList.add('hidden');
+                }
+            });
+        }
+    }
+    
+    // Add event listener for sitewide toggle
+    const sitewideToggle = document.getElementById('banner_sitewide');
+    if (sitewideToggle) {
+        sitewideToggle.addEventListener('change', updateConditionalFields);
+    }
+    
+    // Initial update
+    updateConditionalFields();
+    
     // Live Preview Functionality
     function updatePreview() {
         const message = document.getElementById('banner_message')?.value || 'Your banner message will appear here...';
