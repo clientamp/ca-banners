@@ -110,7 +110,7 @@ if (sitewideNo) {
         const fontFamily = document.getElementById('banner_font_family')?.value || 'Arial';
         const fontWeight = document.getElementById('banner_font_weight')?.value || '600';
         const repeat = document.getElementById('banner_repeat')?.value || '10';
-        const speed = document.getElementById('banner_speed')?.value || '120';
+        const speed = document.getElementById('banner_speed')?.value || '60';
         
         // Button settings
         const buttonEnabled = document.querySelector('input[name="banner_plugin_settings[button_enabled]"]')?.checked || false;
@@ -140,9 +140,9 @@ if (sitewideNo) {
             }
             
             // Create preview content with message and button
-            let previewHTML = '<div class="ca-banner-preview-text" style="animation-duration: ' + speed + 's;">' + repeatedMessage + '</div>';
+            let previewHTML = '<div class="ca-banner-preview-text" style="animation-duration: ' + speed + 's;">' + repeatedMessage;
             
-            // Add button if enabled
+            // Add button if enabled (inside the scrolling text)
             if (buttonEnabled && buttonText && buttonLink) {
                 previewHTML += '<a href="' + buttonLink + '" class="ca-banner-preview-button" style="' +
                     'display: inline-block !important; ' +
@@ -159,6 +159,8 @@ if (sitewideNo) {
                     'vertical-align: middle !important;' +
                     '">' + buttonText + '</a>';
             }
+            
+            previewHTML += '</div>';
             
             previewContent.innerHTML = previewHTML;
         }
@@ -208,8 +210,15 @@ if (sitewideNo) {
         }
     });
     
-    // Initial preview update
-    updatePreview();
+    // Initial preview update with delay to ensure DOM is ready
+    setTimeout(function() {
+        updatePreview();
+    }, 100);
+    
+    // Also update on window load as fallback
+    window.addEventListener('load', function() {
+        updatePreview();
+    });
     
     // Image upload functionality
     var uploadButton = document.getElementById('upload_image_button');

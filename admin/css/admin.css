@@ -11,14 +11,14 @@
     border: 1px solid #c3c4c7;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     overflow: hidden;
 }
 
 .ca-banner-card-header {
     background: #f6f7f7;
     border-bottom: 1px solid #c3c4c7;
-    padding: 16px 20px;
+    padding: 20px 24px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -38,15 +38,15 @@
 }
 
 .ca-banner-card-content {
-    padding: 20px;
+    padding: 24px;
 }
 
 /* Toggle Switch */
 .ca-banner-toggle-container {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
+    gap: 10px;
+    margin-bottom: 6px;
 }
 
 .ca-banner-toggle {
@@ -69,7 +69,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ddd;
+    background-color: #c3c4c7;
     transition: .3s;
     border-radius: 24px;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
@@ -100,6 +100,7 @@
     font-weight: 600;
     color: #1d2327;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .ca-banner-toggle input:checked ~ .ca-banner-toggle-label {
@@ -108,19 +109,33 @@
 
 /* Form Controls */
 .ca-banner-form-group {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: border-color 0.2s ease;
+}
+
+.ca-banner-form-group:hover {
+    border-color: #c3c4c7;
+}
+
+.ca-banner-form-group:focus-within {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
 }
 
 .ca-banner-form-group label {
     display: block;
     font-weight: 600;
     color: #1d2327;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     font-size: 14px;
 }
 
 .ca-banner-form-group .description {
-    margin-top: 6px;
+    margin-top: 8px;
     font-size: 13px;
     color: #646970;
     line-height: 1.4;
@@ -310,8 +325,8 @@
 .ca-banner-preview-text {
     display: inline-block;
     white-space: nowrap;
-    animation: ca-banner-preview-scroll 15s linear infinite;
-    padding-right: 20px;
+    animation: ca-banner-preview-scroll 60s linear infinite; /* Default animation */
+    padding-right: 20px; /* Space between repeats */
 }
 
 @keyframes ca-banner-preview-scroll {

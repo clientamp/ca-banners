@@ -274,10 +274,10 @@ class CA_Banners_Settings {
         $speed = $settings['speed'];
         echo '<div class="ca-banner-form-group">';
         echo '<div style="display: flex; align-items: center; gap: 10px;">';
-        echo '<input type="range" name="' . self::OPTION_NAME . '[speed]" id="banner_speed" class="ca-banner-range" value="' . esc_attr($speed) . '" min="30" max="300" oninput="document.getElementById(\'speed-value\').textContent = this.value + \'s\'">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[speed]" id="banner_speed" class="ca-banner-range" value="' . esc_attr($speed) . '" min="10" max="100" oninput="document.getElementById(\'speed-value\').textContent = this.value + \'s\'">';
         echo '<span class="ca-banner-range-value" id="speed-value">' . esc_attr($speed) . 's</span>';
         echo '</div>';
-        echo '<p class="description">Control how fast the banner message scrolls (30-300 seconds). Lower values = faster scrolling.</p>';
+        echo '<p class="description">Control how fast the banner message scrolls (10-100 seconds). Lower values = faster scrolling.</p>';
         echo '</div>';
     }
     
@@ -516,7 +516,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $start_date = $settings['start_date'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_start_date">Banner Start Date</label>';
         echo '<input type="datetime-local" name="' . self::OPTION_NAME . '[start_date]" id="banner_start_date" class="ca-banner-input" value="' . esc_attr($start_date) . '">';
         echo '<p class="description">Set when the banner should start displaying. Leave empty to start immediately.</p>';
         echo '</div>';
@@ -526,7 +525,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $end_date = $settings['end_date'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_end_date">Banner End Date</label>';
         echo '<input type="datetime-local" name="' . self::OPTION_NAME . '[end_date]" id="banner_end_date" class="ca-banner-input" value="' . esc_attr($end_date) . '">';
         echo '<p class="description">Set when the banner should stop displaying. Leave empty to display indefinitely.</p>';
         echo '</div>';

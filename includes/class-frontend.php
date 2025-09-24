@@ -163,7 +163,7 @@ class CA_Banners_Frontend {
         // Simple banner rendering (like original)
         $message = $settings['message'];
         $repeat = isset($settings['repeat']) ? intval($settings['repeat']) : 10;
-        $speed = isset($settings['speed']) ? intval($settings['speed']) : 120;
+        $speed = isset($settings['speed']) ? intval($settings['speed']) : 60;
         $background_color = isset($settings['background_color']) ? $settings['background_color'] : '#729946';
         $text_color = isset($settings['text_color']) ? $settings['text_color'] : '#000000';
         $font_size = isset($settings['font_size']) ? intval($settings['font_size']) : 16;
@@ -253,28 +253,32 @@ class CA_Banners_Frontend {
                     repeatedMessage += message;
                 }
                 
-                // Add button to the repeated message if enabled
-                if (caBannerConfig.buttonEnabled && caBannerConfig.buttonText && caBannerConfig.buttonLink) {
-                    var buttonHTML = '<a href="' + caBannerConfig.buttonLink + '" class="ca-banner-button" style="' +
-                        'display: inline-block !important; ' +
-                        'background-color: ' + caBannerConfig.buttonColor + ' !important; ' +
-                        'color: ' + caBannerConfig.buttonTextColor + ' !important; ' +
-                        'border: ' + caBannerConfig.buttonBorderWidth + 'px solid ' + caBannerConfig.buttonBorderColor + ' !important; ' +
-                        'border-radius: ' + caBannerConfig.buttonBorderRadius + 'px !important; ' +
-                        'padding: ' + caBannerConfig.buttonPadding + 'px !important; ' +
-                        'font-size: ' + caBannerConfig.buttonFontSize + 'px !important; ' +
-                        'font-weight: ' + caBannerConfig.buttonFontWeight + ' !important; ' +
-                        'text-decoration: none !important; ' +
-                        'margin-left: 20px !important; ' +
-                        'white-space: nowrap !important; ' +
-                        'vertical-align: middle !important;' +
-                        '">' + caBannerConfig.buttonText + '</a>';
-                    
-                    repeatedMessage += buttonHTML;
-                }
-                
                 // Set HTML content to allow HTML/CSS styling
                 messageContainer.innerHTML = repeatedMessage;
+                
+                // Add button if enabled (outside the repeated message)
+                if (caBannerConfig.buttonEnabled && caBannerConfig.buttonText && caBannerConfig.buttonLink) {
+                    var button = document.createElement("a");
+                    button.href = caBannerConfig.buttonLink;
+                    button.className = "ca-banner-button";
+                    button.textContent = caBannerConfig.buttonText;
+                    button.style.cssText = [
+                        'display: inline-block !important',
+                        'background-color: ' + caBannerConfig.buttonColor + ' !important',
+                        'color: ' + caBannerConfig.buttonTextColor + ' !important',
+                        'border: ' + caBannerConfig.buttonBorderWidth + 'px solid ' + caBannerConfig.buttonBorderColor + ' !important',
+                        'border-radius: ' + caBannerConfig.buttonBorderRadius + 'px !important',
+                        'padding: ' + caBannerConfig.buttonPadding + 'px !important',
+                        'font-size: ' + caBannerConfig.buttonFontSize + 'px !important',
+                        'font-weight: ' + caBannerConfig.buttonFontWeight + ' !important',
+                        'text-decoration: none !important',
+                        'margin-left: 20px !important',
+                        'white-space: nowrap !important',
+                        'vertical-align: middle !important'
+                    ].join('; ');
+                    
+                    messageContainer.appendChild(button);
+                }
                 
                 bannerContent.appendChild(messageContainer);
                 
@@ -304,16 +308,16 @@ class CA_Banners_Frontend {
                 bannerContent.style.margin = '0';
                 bannerContent.style.padding = '0';
                 
-                // Add or update CSS animation
-                var existingStyle = document.querySelector('#ca-banner-animation-style');
-                if (existingStyle) {
-                    existingStyle.remove();
+                // Add CSS animation (create once, update duration via style attribute)
+                if (!document.querySelector('#ca-banner-animation-style')) {
+                    var style = document.createElement('style');
+                    style.id = 'ca-banner-animation-style';
+                    style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }';
+                    document.head.appendChild(style);
                 }
                 
-                var style = document.createElement('style');
-                style.id = 'ca-banner-animation-style';
-                style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } } .ca-banner-message { animation: ca-banner-marquee ' + caBannerConfig.speed + 's linear infinite !important; }';
-                document.head.appendChild(style);
+                // Apply animation duration directly to the message container
+                messageContainer.style.animation = 'ca-banner-marquee ' + caBannerConfig.speed + 's linear infinite';
                 
                 banner.appendChild(bannerContent);
                 
@@ -448,28 +452,32 @@ class CA_Banners_Frontend {
                         repeatedMessage += message;
                     }
                     
-                    // Add button to the repeated message if enabled
-                    if (config.buttonEnabled && config.buttonText && config.buttonLink) {
-                        var buttonHTML = '<a href="' + config.buttonLink + '" class="ca-banner-button" style="' +
-                            'display: inline-block !important; ' +
-                            'background-color: ' + (config.buttonColor || '#ce7a31') + ' !important; ' +
-                            'color: ' + (config.buttonTextColor || '#ffffff') + ' !important; ' +
-                            'border: ' + (config.buttonBorderWidth || 0) + 'px solid ' + (config.buttonBorderColor || '#ce7a31') + ' !important; ' +
-                            'border-radius: ' + (config.buttonBorderRadius || 4) + 'px !important; ' +
-                            'padding: ' + (config.buttonPadding || 8) + 'px !important; ' +
-                            'font-size: ' + (config.buttonFontSize || 14) + 'px !important; ' +
-                            'font-weight: ' + (config.buttonFontWeight || '600') + ' !important; ' +
-                            'text-decoration: none !important; ' +
-                            'margin-left: 20px !important; ' +
-                            'white-space: nowrap !important; ' +
-                            'vertical-align: middle !important;' +
-                            '">' + config.buttonText + '</a>';
-                        
-                        repeatedMessage += buttonHTML;
-                    }
-                    
                     // Set HTML content to allow HTML/CSS styling
                     messageContainer.innerHTML = repeatedMessage;
+                    
+                    // Add button if enabled (outside the repeated message)
+                    if (config.buttonEnabled && config.buttonText && config.buttonLink) {
+                        var button = document.createElement("a");
+                        button.href = config.buttonLink;
+                        button.className = "ca-banner-button";
+                        button.textContent = config.buttonText;
+                        button.style.cssText = [
+                            'display: inline-block !important',
+                            'background-color: ' + (config.buttonColor || '#ce7a31') + ' !important',
+                            'color: ' + (config.buttonTextColor || '#ffffff') + ' !important',
+                            'border: ' + (config.buttonBorderWidth || 0) + 'px solid ' + (config.buttonBorderColor || '#ce7a31') + ' !important',
+                            'border-radius: ' + (config.buttonBorderRadius || 4) + 'px !important',
+                            'padding: ' + (config.buttonPadding || 8) + 'px !important',
+                            'font-size: ' + (config.buttonFontSize || 14) + 'px !important',
+                            'font-weight: ' + (config.buttonFontWeight || '600') + ' !important',
+                            'text-decoration: none !important',
+                            'margin-left: 20px !important',
+                            'white-space: nowrap !important',
+                            'vertical-align: middle !important'
+                        ].join('; ');
+                        
+                        messageContainer.appendChild(button);
+                    }
                     bannerContent.appendChild(messageContainer);
 
                     // Apply inline styles for maximum compatibility
@@ -499,24 +507,16 @@ class CA_Banners_Frontend {
                     bannerContent.style.margin = '0';
                     bannerContent.style.padding = '0';
                     
-                    // Create and add CSS animation dynamically (update each time)
-                    var existingStyle = document.querySelector('#ca-banner-animation-style');
-                    if (existingStyle) {
-                        existingStyle.remove();
+                    // Add CSS animation (create once, update duration via style attribute)
+                    if (!document.querySelector('#ca-banner-animation-style')) {
+                        var style = document.createElement('style');
+                        style.id = 'ca-banner-animation-style';
+                        style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }';
+                        document.head.appendChild(style);
                     }
                     
-                    var style = document.createElement('style');
-                    style.id = 'ca-banner-animation-style';
-                    style.textContent = `
-                        @keyframes ca-banner-marquee {
-                            0% { transform: translateX(0%); }
-                            100% { transform: translateX(-100%); }
-                        }
-                        .ca-banner-message {
-                            animation: ca-banner-marquee ' + (config.speed || 120) + 's linear infinite !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
+                // Apply animation duration directly to the message container
+                messageContainer.style.animation = 'ca-banner-marquee ' + (config.speed || 60) + 's linear infinite';
                     
                     // Add animation class
                     bannerContent.classList.add('ca-banner-content');

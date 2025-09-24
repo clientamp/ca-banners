@@ -43,7 +43,7 @@ class CA_Banners_Validator {
         
         // Numeric fields with validation
         $sanitized['repeat'] = isset($input['repeat']) ? max(1, min(100, intval($input['repeat']))) : 10;
-        $sanitized['speed'] = isset($input['speed']) ? max(30, min(300, intval($input['speed']))) : 120;
+        $sanitized['speed'] = isset($input['speed']) ? max(10, min(100, intval($input['speed']))) : 60;
         $sanitized['font_size'] = isset($input['font_size']) ? max(10, min(40, intval($input['font_size']))) : 16;
         $sanitized['font_weight'] = isset($input['font_weight']) ? sanitize_text_field($input['font_weight']) : '600';
         $sanitized['border_width'] = isset($input['border_width']) ? max(0, min(10, intval($input['border_width']))) : 0;
@@ -105,7 +105,7 @@ class CA_Banners_Validator {
         }
         
         // Validate other settings
-        $validated['sitewide'] = isset($settings['sitewide']) ? (bool) $settings['sitewide'] : false;
+        $validated['sitewide'] = isset($settings['sitewide']) ? (bool) $settings['sitewide'] : true;
         $validated['disable_mobile'] = isset($settings['disable_mobile']) ? (bool) $settings['disable_mobile'] : false;
         $validated['urls'] = isset($settings['urls']) ? $settings['urls'] : '';
         $validated['exclude_urls'] = isset($settings['exclude_urls']) ? $settings['exclude_urls'] : '';
