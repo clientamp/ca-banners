@@ -51,6 +51,14 @@ class CA_Banners_Admin {
             <form method="post" action="options.php" id="ca-banner-settings-form">
                 <?php settings_fields('banner_plugin_settings'); ?>
                 
+                <!-- Live Preview -->
+                <div class="ca-banner-preview">
+                    <span class="ca-banner-preview-label">Live Preview</span>
+                    <div class="ca-banner-preview-content" id="ca-banner-preview-content">
+                        Your banner message will appear here...
+                    </div>
+                </div>
+                
                 <!-- Basic Settings Card -->
                 <div class="ca-banner-card">
                     <div class="ca-banner-card-header">
@@ -87,14 +95,6 @@ class CA_Banners_Admin {
                     </div>
                     <div class="ca-banner-card-content">
                         <?php do_settings_fields('banner-plugin', 'banner_styling_section'); ?>
-                        
-                        <!-- Live Preview -->
-                        <div class="ca-banner-preview">
-                            <span class="ca-banner-preview-label">Live Preview</span>
-                            <div class="ca-banner-preview-content" id="ca-banner-preview-content">
-                                Your banner message will appear here...
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
