@@ -115,6 +115,11 @@ class CA_Banners {
      * Initialize plugin
      */
     public function init() {
+        // Debug: Check if init is being called
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('CA Banners: init() called');
+        }
+        
         // Initialize core classes
         $this->validator = new CA_Banners_Validator();
         $this->url_matcher = new CA_Banners_URL_Matcher();
@@ -124,10 +129,16 @@ class CA_Banners {
         // Initialize admin and frontend
         if (is_admin()) {
             $this->admin = new CA_Banners_Admin();
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('CA Banners: Admin class initialized');
+            }
         }
         
         // Always initialize frontend for banner display
         $this->frontend = new CA_Banners_Frontend();
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('CA Banners: Frontend class initialized');
+        }
         
         // Fire action for other plugins to hook into
         do_action('ca_banners_init', $this);

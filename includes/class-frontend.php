@@ -20,6 +20,11 @@ class CA_Banners_Frontend {
      * Constructor
      */
     public function __construct() {
+        // Debug: Check if frontend class is being constructed
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('CA Banners: Frontend class constructor called');
+        }
+        
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'), 5);
         add_action('wp_head', array($this, 'render_banner'), 1);
     }
@@ -42,7 +47,17 @@ class CA_Banners_Frontend {
      * Render banner
      */
     public function render_banner() {
+        // Debug: Check if render_banner is being called
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('CA Banners: render_banner() called');
+        }
+        
         $settings = get_option('banner_plugin_settings');
+        
+        // Debug: Check settings
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('CA Banners: Settings = ' . print_r($settings, true));
+        }
         
         // Create validator instance if not available
         if (!class_exists('CA_Banners_Validator')) {

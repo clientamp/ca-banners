@@ -33,6 +33,11 @@ require_once CA_BANNERS_PLUGIN_DIR . 'includes/class-ca-banners.php';
  * Initialize the plugin
  */
 function ca_banners_init() {
+    // Debug: Check if plugin is loading
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('CA Banners: Plugin initialization started');
+    }
+    
     return CA_Banners::get_instance();
 }
 
