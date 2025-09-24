@@ -27,6 +27,9 @@ class CA_Banners_Frontend {
         
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'), 5);
         add_action('wp_head', array($this, 'render_banner'), 1);
+        
+        // Also hook directly to wp_head as a fallback (like original)
+        add_action('wp_head', array($this, 'render_banner_direct'), 1);
     }
     
     /**
@@ -132,6 +135,130 @@ class CA_Banners_Frontend {
         }
         
         $this->render_banner_script($message, $repeat, $background_color, $text_color, $font_size, $font_family, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date);
+    }
+    
+    /**
+     * Direct banner rendering (like original function)
+     */
+    public function render_banner_direct() {
+        // Debug: Check if direct render is being called
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('CA Banners: render_banner_direct() called');
+        }
+        
+        $settings = get_option('banner_plugin_settings');
+        
+        // Debug: Check settings
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('CA Banners: Direct render settings = ' . print_r($settings, true));
+        }
+        
+        if (!$settings || !isset($settings['enabled']) || !$settings['enabled'] || empty($settings['message'])) {
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('CA Banners: Banner not enabled or no message');
+            }
+            return;
+        }
+        
+        // Simple banner rendering (like original)
+        $message = $settings['message'];
+        $repeat = isset($settings['repeat']) ? intval($settings['repeat']) : 10;
+        $background_color = isset($settings['background_color']) ? $settings['background_color'] : '#729946';
+        $text_color = isset($settings['text_color']) ? $settings['text_color'] : '#000000';
+        $font_size = isset($settings['font_size']) ? intval($settings['font_size']) : 16;
+        $font_family = isset($settings['font_family']) ? $settings['font_family'] : 'Arial';
+        $border_width = isset($settings['border_width']) ? intval($settings['border_width']) : 0;
+        $border_style = isset($settings['border_style']) ? $settings['border_style'] : 'solid';
+        $border_color = isset($settings['border_color']) ? $settings['border_color'] : '#000000';
+        $disable_mobile = isset($settings['disable_mobile']) ? $settings['disable_mobile'] : false;
+        
+        // Create repeated message
+        $repeated_message = '';
+        for ($i = 0; $i < $repeat; $i++) {
+            $repeated_message .= $message . ' &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ';
+        }
+        
+        echo '<script>';
+        echo 'var caBannerConfig = {';
+        echo 'message: ' . json_encode($repeated_message) . ',';
+        echo 'backgroundColor: "' . esc_js($background_color) . '",';
+        echo 'textColor: "' . esc_js($text_color) . '",';
+        echo 'fontSize: ' . $font_size . ',';
+        echo 'fontFamily: "' . esc_js($font_family) . '",';
+        echo 'borderWidth: ' . $border_width . ',';
+        echo 'borderStyle: "' . esc_js($border_style) . '",';
+        echo 'borderColor: "' . esc_js($border_color) . '",';
+        echo 'disableMobile: ' . ($disable_mobile ? 'true' : 'false');
+        echo '};';
+        ?>
+        
+        (function() {
+            'use strict';
+            
+            // Mobile check
+            if (caBannerConfig.disableMobile && window.matchMedia && window.matchMedia("(max-width: 768px)").matches) {
+                return;
+            }
+            
+            // Check if banner already exists
+            if (document.querySelector('.ca-banner-container')) {
+                return;
+            }
+            
+            var banner = document.createElement("div");
+            banner.className = "ca-banner-container";
+            banner.setAttribute('data-ca-banner', 'true');
+            
+            var bannerContent = document.createElement("div");
+            bannerContent.className = "ca-banner-content";
+            bannerContent.innerHTML = caBannerConfig.message;
+            
+            // Apply inline styles
+            banner.style.cssText = [
+                'position: relative !important',
+                'top: 0 !important',
+                'left: 0 !important',
+                'width: 100% !important',
+                'background-color: ' + caBannerConfig.backgroundColor + ' !important',
+                'color: ' + caBannerConfig.textColor + ' !important',
+                'padding: 10px !important',
+                'text-align: center !important',
+                'z-index: 999999 !important',
+                'overflow: hidden !important',
+                'font-weight: 600 !important',
+                'font-size: ' + caBannerConfig.fontSize + 'px !important',
+                'font-family: "' + caBannerConfig.fontFamily + '", sans-serif !important',
+                'border-top: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
+                'border-bottom: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
+                'margin: 0 !important',
+                'box-shadow: none !important'
+            ].join('; ');
+            
+            bannerContent.style.display = 'inline-block';
+            bannerContent.style.whiteSpace = 'nowrap';
+            bannerContent.style.margin = '0';
+            bannerContent.style.padding = '0';
+            
+            // Add CSS animation
+            if (!document.querySelector('#ca-banner-animation-style')) {
+                var style = document.createElement('style');
+                style.id = 'ca-banner-animation-style';
+                style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } } .ca-banner-content { animation: ca-banner-marquee 120s linear infinite !important; }';
+                document.head.appendChild(style);
+            }
+            
+            banner.appendChild(bannerContent);
+            
+            // Insert banner at the beginning of body
+            if (document.body) {
+                document.body.insertBefore(banner, document.body.firstChild);
+            }
+            
+            console.log('CA Banners: Banner displayed successfully');
+        })();
+        
+        <?php
+        echo '</script>';
     }
     
     /**
