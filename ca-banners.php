@@ -3,7 +3,7 @@
 Plugin Name: CA Banners
 Plugin URI: https://github.com/clientamp/ca-banners
 Description: Professional WordPress banner plugin with customizable scrolling messages, advanced scheduling, page targeting, and image support. Perfect for promotions, announcements, and site-wide notices.
-Version: 1.2.7
+Version: 2.0.0
 Author: clientamp
 Author URI: https://clientamp.com/
 Requires at least: 4.0
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('CA_BANNERS_VERSION', '1.2.7');
+define('CA_BANNERS_VERSION', '2.0.0');
 define('CA_BANNERS_PLUGIN_FILE', __FILE__);
 define('CA_BANNERS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CA_BANNERS_PLUGIN_URL', plugin_dir_url(__FILE__));

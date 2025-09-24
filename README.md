@@ -1,10 +1,36 @@
 # CA Banners
 
-A WordPress plugin that displays customizable scrolling banners with advanced scheduling and targeting options.
+A professional WordPress plugin that displays customizable scrolling banners with advanced scheduling, page targeting, and modern admin interface.
+
+## Version 2.0 - Major Update
+
+**CA Banners 2.0** represents a complete architectural overhaul with significant improvements:
+
+### 🏗️ **Modular Architecture**
+- **Separation of Concerns**: Split monolithic code into dedicated classes
+- **Better Maintainability**: Easier to debug, update, and extend
+- **WordPress Standards**: Follows WordPress plugin development best practices
+- **Future-Ready**: Foundation for advanced features like analytics and A/B testing
+
+### 🎨 **Modern Admin Interface**
+- **Card-Based Layout**: Clean, organized settings sections
+- **Live Preview**: Real-time banner preview as you customize
+- **Toggle Switches**: Modern UI controls for better UX
+- **Range Sliders**: Intuitive controls for numeric values
+- **Color Pickers**: Easy color selection
+- **Help System**: Integrated help tabs and descriptions
+
+### 🚀 **Enhanced Features**
+- **HTML/CSS Support**: Rich text formatting in banner messages
+- **Improved Scheduling**: Better date/time handling
+- **Advanced Targeting**: Precise page inclusion/exclusion
+- **Theme Compatibility**: Enhanced conflict detection and resolution
+- **Performance**: Optimized loading and rendering
+- **Debugging**: Comprehensive debug information for troubleshooting
 
 ## Features
 
-- **Customizable Scrolling Banner**: Create eye-catching scrolling text banners
+- **Customizable Scrolling Banner**: Create eye-catching scrolling text banners with HTML/CSS support
 - **Advanced Scheduling**: Set start and end dates for banner display
 - **Flexible Display Options**: 
   - Display sitewide or on specific pages
@@ -15,7 +41,9 @@ A WordPress plugin that displays customizable scrolling banners with advanced sc
   - Font family and size options
   - Border styling (width, style, color)
 - **Image Banner Support**: Display images with their own scheduling
-- **Easy Administration**: Simple WordPress admin interface
+- **Modern Administration**: Card-based interface with live preview
+- **Button Support**: Add call-to-action buttons to banners
+- **Theme Compatibility**: Automatic conflict detection and resolution
 
 ## Installation
 
@@ -81,6 +109,23 @@ A WordPress plugin that displays customizable scrolling banners with advanced sc
 For support and feature requests, please contact [clientamp.com](https://clientamp.com/).
 
 ## Changelog
+
+### Version 2.0.0 - Major Architectural Overhaul
+- **BREAKING CHANGE**: Complete modular refactoring
+- Split monolithic 1600+ line file into organized classes
+- Modern card-based admin interface with live preview
+- Enhanced HTML/CSS support in banner messages
+- Improved theme compatibility and conflict resolution
+- Better debugging and error handling
+- Foundation for future advanced features
+- Performance optimizations
+- WordPress coding standards compliance
+
+### Version 1.2.7
+- Fixed banner display issues
+- Enhanced admin interface
+- Added HTML/CSS support
+- Improved mobile compatibility
 
 ### Version 1.1
 - Added sitewide display option
