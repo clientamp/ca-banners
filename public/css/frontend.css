@@ -1,4 +1,4 @@
-/* CA Banners Frontend Styles */
+/* CA Banners Frontend Styles - DEBUG: CSS FILE LOADED SUCCESSFULLY */
 
 /* CA Banner - High specificity to override theme styles */
 html.ca-banner-active { 
@@ -9,7 +9,7 @@ body.ca-banner-active {
     margin-top: 0 !important;
 }
 
-/* Ensure banner appears above all theme elements */
+/* Ensure banner appears above all theme elements - Match Live Preview exactly */
 .ca-banner-container {
     position: relative !important;
     top: 0 !important;
@@ -17,26 +17,63 @@ body.ca-banner-active {
     width: 100% !important;
     z-index: 999999 !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 10px !important;
     border: none !important;
     box-shadow: none !important;
+    background: #729946 !important;
+    color: #000 !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    font-family: Arial, sans-serif !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 40px !important;
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
 }
 
-.ca-banner-content {
-    display: inline-block !important;
+/* Ultra high specificity to override any theme styles */
+.ca-banner-container .ca-banner-content,
+div.ca-banner-container div.ca-banner-content,
+body .ca-banner-container .ca-banner-content {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    overflow: hidden !important;
     white-space: nowrap !important;
-    animation: ca-banner-marquee 120s linear infinite !important;
     margin: 0 !important;
     padding: 0 !important;
 }
 
-@keyframes ca-banner-marquee {
-    0% {
-        transform: translateX(0%) !important;
-    }
-    100% {
-        transform: translateX(-100%) !important;
-    }
+.ca-banner-message {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    animation: ca-banner-preview-scroll linear infinite !important;
+    padding-right: 20px !important;
+    will-change: transform !important;
+    min-width: 200px !important;
+    /* Default duration - will be overridden by JavaScript */
+    animation-duration: 60s !important;
+    z-index: 1 !important;
+}
+
+@keyframes ca-banner-preview-scroll {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+/* Button styling to match preview */
+.ca-banner-button {
+    display: inline-block !important;
+    text-decoration: none !important;
+    margin-left: 20px !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+    z-index: 2 !important;
 }
 
 /* Mobile responsive adjustments */
@@ -55,14 +92,6 @@ body.ca-banner-active {
     margin-top: 3rem !important;
 }
 
-/* Theme compatibility fixes */
-.ca-banner-container {
-    position: relative !important;
-    z-index: 999999 !important;
-    transform: translateZ(0) !important;
-    -webkit-transform: translateZ(0) !important;
-}
-
 /* Override theme-specific positioning */
 body.ca-banner-active .site-header,
 body.ca-banner-active .main-header,
@@ -76,4 +105,23 @@ body.ca-banner-active .navbar {
 .ca-banner-container * {
     position: relative !important;
     z-index: inherit !important;
+}
+
+/* Sticky Banner */
+.ca-banner-sticky {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 999999 !important;
+}
+
+/* Adjust for admin bar if present */
+.admin-bar .ca-banner-sticky {
+    top: 32px !important; /* Default admin bar height */
+}
+
+/* Mobile admin bar adjustment */
+@media screen and (max-width: 600px) {
+    .admin-bar .ca-banner-sticky {
+        top: 46px !important;
+    }
 }

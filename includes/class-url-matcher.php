@@ -18,9 +18,13 @@ class CA_Banners_URL_Matcher {
     
     /**
      * Normalize URL for consistent comparison
-     *
+     * 
+     * Standardizes URL format by ensuring proper leading/trailing slashes
+     * and handling edge cases like empty URLs and root paths.
+     * 
+     * @since 1.2.7
      * @param string $url Raw URL to normalize
-     * @return string Normalized URL
+     * @return string Normalized URL with consistent format
      */
     public function normalize_url($url) {
         $url = trim($url);
@@ -39,7 +43,11 @@ class CA_Banners_URL_Matcher {
     
     /**
      * Process URL list from textarea input
-     *
+     * 
+     * Converts a newline-separated URL list into an array of normalized URLs
+     * with duplicates removed.
+     * 
+     * @since 1.2.7
      * @param string $url_list Raw URL list from textarea
      * @return array Array of normalized URLs
      */
@@ -58,8 +66,12 @@ class CA_Banners_URL_Matcher {
     }
     
     /**
-     * Check if current URL matches any URL in the list (supports wildcards)
-     *
+     * Check if current URL matches any URL in the list
+     * 
+     * Supports exact matches, wildcard matches (ending with *), and partial
+     * matches for subdirectories.
+     * 
+     * @since 1.2.7
      * @param string $current_url Current normalized URL
      * @param array $url_list Array of URLs to match against
      * @return bool True if match found
@@ -94,7 +106,11 @@ class CA_Banners_URL_Matcher {
     
     /**
      * Check if banner should be displayed based on URL settings
-     *
+     * 
+     * Determines banner visibility based on sitewide setting, include URLs,
+     * and exclude URLs. Exclude URLs take precedence over include URLs.
+     * 
+     * @since 1.2.7
      * @param string $current_url Current page URL
      * @param bool $sitewide Whether sitewide display is enabled
      * @param string $include_urls Include URLs setting

@@ -19,136 +19,145 @@ class CA_Banners_Settings {
     /**
      * Settings option name
      */
-    const OPTION_NAME = 'banner_plugin_settings';
+    const OPTION_NAME = CA_Banners_Constants::OPTION_NAME;
     
     /**
      * Default settings
      */
-    private $default_settings = array(
-        'enabled' => false,
-        'message' => '',
-        'repeat' => 10,
-        'background_color' => '#729946',
-        'text_color' => '#000000',
-        'font_size' => 16,
-        'font_family' => 'Arial',
-        'border_width' => 0,
-        'border_style' => 'solid',
-        'border_color' => '#000000',
-        'sitewide' => false,
-        'disable_mobile' => false,
-        'urls' => '',
-        'exclude_urls' => '',
-        'start_date' => '',
-        'end_date' => '',
-        'image' => '',
-        'image_start_date' => '',
-        'image_end_date' => '',
-        'button_enabled' => false,
-        'button_text' => '',
-        'button_link' => '',
-        'button_color' => '#ce7a31',
-        'button_text_color' => '#ffffff',
-        'button_border_width' => 0,
-        'button_border_color' => '#ce7a31',
-        'button_border_radius' => 4,
-        'button_padding' => 8,
-        'button_font_size' => 14,
-        'button_font_weight' => '600'
-    );
+    private $default_settings;
     
     /**
-     * Constructor
+     * Constructor - Initialize settings functionality
+     * 
+     * Sets up default settings and registers WordPress settings API hooks.
+     * 
+     * @since 1.2.7
      */
     public function __construct() {
+        $this->default_settings = CA_Banners_Constants::get_default_settings();
         add_action('admin_init', array($this, 'register_settings'));
     }
     
     /**
      * Register plugin settings with WordPress
+     * 
+     * Registers all settings sections and fields with the WordPress Settings API
+     * for proper form handling and validation.
+     * 
+     * @since 1.2.7
      */
     public function register_settings() {
-        register_setting('banner_plugin_settings', self::OPTION_NAME, array(
+        register_setting(CA_Banners_Constants::OPTION_NAME, self::OPTION_NAME, array(
             'sanitize_callback' => array($this, 'sanitize_settings')
         ));
 
         // Basic Settings Section
-        add_settings_section('banner_basic_section', 'Basic Settings', array($this, 'basic_section_callback'), 'banner-plugin');
-        add_settings_field('banner_enabled', 'Enable Banner', array($this, 'enabled_callback'), 'banner-plugin', 'banner_basic_section');
-        add_settings_field('banner_message', 'Banner Message', array($this, 'message_callback'), 'banner-plugin', 'banner_basic_section');
-        add_settings_field('banner_repeat', 'Message Repeats', array($this, 'repeat_callback'), 'banner-plugin', 'banner_basic_section');
-        add_settings_field('banner_speed', 'Scroll Speed', array($this, 'speed_callback'), 'banner-plugin', 'banner_basic_section');
+        add_settings_section('banner_basic_section', 'Basic Settings', array($this, 'basic_section_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG);
+        add_settings_field('banner_enabled', 'Enable Banner', array($this, 'enabled_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
+        add_settings_field('banner_message', 'Banner Message', array($this, 'message_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
+        add_settings_field('banner_repeat', 'Message Repeats', array($this, 'repeat_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
+        add_settings_field('banner_speed', 'Scroll Speed', array($this, 'speed_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
+        add_settings_field('banner_sticky', 'Sticky Banner', array($this, 'sticky_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
 
         // Display Settings Section
-        add_settings_section('banner_display_section', 'Display Settings', array($this, 'display_section_callback'), 'banner-plugin');
-        add_settings_field('banner_sitewide', 'Banner Visibility', array($this, 'sitewide_callback'), 'banner-plugin', 'banner_display_section');
-        add_settings_field('banner_urls', 'Include Pages', array($this, 'urls_callback'), 'banner-plugin', 'banner_display_section');
-        add_settings_field('banner_exclude_urls', 'Exclude Pages', array($this, 'exclude_urls_callback'), 'banner-plugin', 'banner_display_section');
-        add_settings_field('banner_disable_mobile', 'Mobile Display', array($this, 'disable_mobile_callback'), 'banner-plugin', 'banner_display_section');
+        add_settings_section('banner_display_section', 'Display Settings', array($this, 'display_section_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG);
+        add_settings_field('banner_sitewide', 'Banner Visibility', array($this, 'sitewide_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_display_section');
+        add_settings_field('banner_urls', 'Include Pages', array($this, 'urls_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_display_section');
+        add_settings_field('banner_exclude_urls', 'Exclude Pages', array($this, 'exclude_urls_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_display_section');
+        add_settings_field('banner_disable_mobile', 'Mobile Display', array($this, 'disable_mobile_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_display_section');
 
         // Style Settings Section (renamed from Styling)
-        add_settings_section('banner_styling_section', 'Style Settings', array($this, 'styling_section_callback'), 'banner-plugin');
-        add_settings_field('banner_background_color', 'Background Color', array($this, 'background_color_callback'), 'banner-plugin', 'banner_styling_section');
-        add_settings_field('banner_text_color', 'Text Color', array($this, 'text_color_callback'), 'banner-plugin', 'banner_styling_section');
-        add_settings_field('banner_font_size', 'Font Size', array($this, 'font_size_callback'), 'banner-plugin', 'banner_styling_section');
-        add_settings_field('banner_font_family', 'Font Family', array($this, 'font_family_callback'), 'banner-plugin', 'banner_styling_section');
-        add_settings_field('banner_font_weight', 'Font Weight', array($this, 'font_weight_callback'), 'banner-plugin', 'banner_styling_section');
-        add_settings_field('banner_border_width', 'Border Width', array($this, 'border_width_callback'), 'banner-plugin', 'banner_styling_section');
-        add_settings_field('banner_border_style', 'Border Style', array($this, 'border_style_callback'), 'banner-plugin', 'banner_styling_section');
-        add_settings_field('banner_border_color', 'Border Color', array($this, 'border_color_callback'), 'banner-plugin', 'banner_styling_section');
+        add_settings_section('banner_styling_section', 'Style Settings', array($this, 'styling_section_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG);
+        add_settings_field('banner_background_color', 'Background Color', array($this, 'background_color_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_text_color', 'Text Color', array($this, 'text_color_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_link_color', 'Link Color', array($this, 'link_color_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_font_size', 'Font Size', array($this, 'font_size_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_font_family', 'Font Family', array($this, 'font_family_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_font_weight', 'Font Weight', array($this, 'font_weight_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_border_width', 'Border Width', array($this, 'border_width_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_border_style', 'Border Style', array($this, 'border_style_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_border_color', 'Border Color', array($this, 'border_color_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
+        add_settings_field('banner_vertical_padding', 'Vertical Padding', array($this, 'vertical_padding_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_styling_section');
 
         // Button Settings Section
-        add_settings_section('banner_button_section', 'Button Settings', array($this, 'button_section_callback'), 'banner-plugin');
-        add_settings_field('banner_button_enabled', 'Enable Button', array($this, 'button_enabled_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_text', 'Button Text', array($this, 'button_text_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_link', 'Button Link', array($this, 'button_link_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_color', 'Button Color', array($this, 'button_color_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_text_color', 'Button Text Color', array($this, 'button_text_color_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_border_width', 'Button Border Width', array($this, 'button_border_width_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_border_color', 'Button Border Color', array($this, 'button_border_color_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_border_radius', 'Button Border Radius', array($this, 'button_border_radius_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_padding', 'Button Padding', array($this, 'button_padding_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_font_size', 'Button Font Size', array($this, 'button_font_size_callback'), 'banner-plugin', 'banner_button_section');
-        add_settings_field('banner_button_font_weight', 'Button Font Weight', array($this, 'button_font_weight_callback'), 'banner-plugin', 'banner_button_section');
+        add_settings_section('banner_button_section', 'Button Settings', array($this, 'button_section_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG);
+        add_settings_field('banner_button_enabled', 'Enable Button', array($this, 'button_enabled_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_text', 'Button Text', array($this, 'button_text_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_link', 'Button Link', array($this, 'button_link_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_color', 'Button Color', array($this, 'button_color_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_text_color', 'Button Text Color', array($this, 'button_text_color_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_border_width', 'Button Border Width', array($this, 'button_border_width_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_border_color', 'Button Border Color', array($this, 'button_border_color_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_border_radius', 'Button Border Radius', array($this, 'button_border_radius_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_padding', 'Button Padding', array($this, 'button_padding_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_font_size', 'Button Font Size', array($this, 'button_font_size_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_font_weight', 'Button Font Weight', array($this, 'button_font_weight_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_lock', 'Button Lock', array($this, 'button_lock_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        // add_settings_field('banner_button_gap', 'Button Gap from Edge', array($this, 'button_gap_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        // add_settings_field('banner_button_new_window', 'Open in New Window', array($this, 'button_new_window_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
 
         // Scheduling Settings Section
-        add_settings_section('banner_scheduling_section', 'Scheduling Settings', array($this, 'scheduling_section_callback'), 'banner-plugin');
-        add_settings_field('banner_start_date', 'Banner Start Date', array($this, 'start_date_callback'), 'banner-plugin', 'banner_scheduling_section');
-        add_settings_field('banner_end_date', 'Banner End Date', array($this, 'end_date_callback'), 'banner-plugin', 'banner_scheduling_section');
+        add_settings_section('banner_scheduling_section', 'Scheduling Settings', array($this, 'scheduling_section_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG);
+        add_settings_field('banner_start_date', 'Banner Start Date', array($this, 'start_date_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_scheduling_section');
+        add_settings_field('banner_end_date', 'Banner End Date', array($this, 'end_date_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_scheduling_section');
 
         // Static Image Banner Settings Section
-        add_settings_section('banner_image_section', 'Static Image Banner Settings', array($this, 'image_section_callback'), 'banner-plugin');
-        add_settings_field('banner_image', 'Banner Image', array($this, 'image_callback'), 'banner-plugin', 'banner_image_section');
-        add_settings_field('banner_image_start_date', 'Image Start Date', array($this, 'image_start_date_callback'), 'banner-plugin', 'banner_image_section');
-        add_settings_field('banner_image_end_date', 'Image End Date', array($this, 'image_end_date_callback'), 'banner-plugin', 'banner_image_section');
+        add_settings_section('banner_image_section', 'Static Image Banner Settings', array($this, 'image_section_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG);
+        add_settings_field('banner_image', 'Banner Image', array($this, 'image_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_image_section');
+        add_settings_field('banner_image_start_date', 'Image Start Date', array($this, 'image_start_date_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_image_section');
+        add_settings_field('banner_image_end_date', 'Image End Date', array($this, 'image_end_date_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_image_section');
     }
     
     /**
-     * Get plugin settings
-     *
-     * @return array Settings array
+     * Get plugin settings with defaults
+     * 
+     * Retrieves settings from cache or database and merges with default values
+     * to ensure all settings have proper fallback values.
+     * 
+     * @since 1.2.7
+     * @return array Complete settings array with defaults
      */
     public function get_settings() {
-        $settings = get_option(self::OPTION_NAME, array());
+        $ca_banners = CA_Banners::get_instance();
+        $settings = $ca_banners->get_cached_settings();
         return wp_parse_args($settings, $this->default_settings);
     }
     
     /**
      * Update plugin settings
-     *
-     * @param array $settings Settings to update
-     * @return bool True on success
+     * 
+     * Updates settings in the database and invalidates relevant caches.
+     * Also fires action hooks for other plugins to respond to setting changes.
+     * 
+     * @since 1.2.7
+     * @param array $settings Settings array to save
+     * @return bool True on success, false on failure
      */
     public function update_settings($settings) {
-        return update_option(self::OPTION_NAME, $settings);
+        $result = update_option(self::OPTION_NAME, $settings);
+        
+        if ($result) {
+            // Invalidate cache when settings are updated
+            $ca_banners = CA_Banners::get_instance();
+            $ca_banners->invalidate_settings_cache();
+            $ca_banners->invalidate_banner_cache();
+            
+            // Fire action for other plugins
+            do_action('ca_banners_settings_updated', $settings);
+        }
+        
+        return $result;
     }
     
     /**
-     * Get a specific setting
-     *
-     * @param string $key Setting key
-     * @param mixed $default Default value
-     * @return mixed Setting value
+     * Get a specific setting value
+     * 
+     * Retrieves a single setting value with proper fallback to default values.
+     * 
+     * @since 1.2.7
+     * @param string $key Setting key to retrieve
+     * @param mixed $default Default value if setting not found
+     * @return mixed Setting value or default
      */
     public function get_setting($key, $default = null) {
         $settings = $this->get_settings();
@@ -166,34 +175,113 @@ class CA_Banners_Settings {
     
     /**
      * Sanitize settings using validator
-     *
-     * @param array $input Raw input
-     * @return array Sanitized input
+     * 
+     * Processes raw form input through the validator class with security
+     * checks including nonce verification and capability checks.
+     * 
+     * @since 1.2.7
+     * @param array $input Raw input data from form
+     * @return array Sanitized and validated settings
      */
     public function sanitize_settings($input) {
-        $ca_banners = CA_Banners::get_instance();
-        return $ca_banners->validator->sanitize_settings($input);
+        try {
+            // Verify nonce for CSRF protection
+            if (!isset($_POST['ca_banners_nonce']) || !wp_verify_nonce($_POST['ca_banners_nonce'], 'ca_banners_settings')) {
+                $this->log_error('Security check failed for settings sanitization', null, CA_Banners_Error_Handler::TYPE_SECURITY, CA_Banners_Error_Handler::SEVERITY_HIGH);
+                wp_die(__('Security check failed. Please try again.', 'ca-banners'));
+            }
+            
+            // Check user capabilities
+            if (!current_user_can('edit_ca_banners')) {
+                $this->log_error('Unauthorized settings access attempt', null, CA_Banners_Error_Handler::TYPE_PERMISSION, CA_Banners_Error_Handler::SEVERITY_HIGH);
+                wp_die(__('You do not have sufficient permissions to access this page.', 'ca-banners'));
+            }
+            
+            $ca_banners = CA_Banners::get_instance();
+            return $ca_banners->validator->sanitize_settings($input);
+            
+        } catch (Exception $e) {
+            $this->log_error('Failed to sanitize settings', $e);
+            // Return original input to prevent data loss
+            return $input;
+        }
     }
     
     /**
-     * Section callback functions
+     * Log errors using centralized error handler
+     * 
+     * Centralized error logging method that uses the main plugin's error handler
+     * if available, or falls back to basic WordPress error logging.
+     * 
+     * @since 1.2.7
+     * @param string $message The error message to log
+     * @param Exception|null $exception Optional exception object
+     * @param string $type Error type (use CA_Banners_Error_Handler constants)
+     * @param string $severity Error severity (use CA_Banners_Error_Handler constants)
+     */
+    private function log_error($message, $exception = null, $type = CA_Banners_Error_Handler::TYPE_SYSTEM, $severity = CA_Banners_Error_Handler::SEVERITY_MEDIUM) {
+        $ca_banners = CA_Banners::get_instance();
+        if ($ca_banners && $ca_banners->error_handler) {
+            $ca_banners->error_handler->log_error($message, $type, $severity, $exception);
+        } else {
+            // Fallback to basic logging
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('CA Banners Settings: ' . $message . ($exception ? ' - ' . $exception->getMessage() : ''));
+            }
+        }
+    }
+    
+    /**
+     * Basic settings section callback
+     * 
+     * Displays description text for the basic settings section.
+     * 
+     * @since 1.2.7
      */
     public function basic_section_callback() {
         echo '<p>Configure the basic banner settings including enabling the banner and setting your message.</p>';
     }
     
+    /**
+     * Display settings section callback
+     * 
+     * Displays description text for the display settings section.
+     * 
+     * @since 1.2.7
+     */
     public function display_section_callback() {
         echo '<p>Control where and when your banner appears on your website.</p>';
     }
     
+    /**
+     * Styling settings section callback
+     * 
+     * Displays description text for the styling settings section.
+     * 
+     * @since 1.2.7
+     */
     public function styling_section_callback() {
         echo '<p>Customize the appearance of your banner with colors, fonts, and borders.</p>';
     }
     
+    /**
+     * Scheduling settings section callback
+     * 
+     * Displays description text for the scheduling settings section.
+     * 
+     * @since 1.2.7
+     */
     public function scheduling_section_callback() {
         echo '<p>Schedule when your banner should start and stop displaying.</p>';
     }
     
+    /**
+     * Image settings section callback
+     * 
+     * Displays description text and feature information for the image banner section.
+     * 
+     * @since 1.2.7
+     */
     public function image_section_callback() {
         echo '<p><strong>Static Image Banner:</strong> Display a full-width promotional image at the top of your pages, separate from the scrolling text banner. Perfect for announcements, promotions, or seasonal campaigns.</p>';
         echo '<p><strong>Key Features:</strong></p>';
@@ -206,7 +294,11 @@ class CA_Banners_Settings {
     }
     
     /**
-     * Field callback functions - these will be moved to admin class
+     * Enabled field callback
+     * 
+     * Renders the banner enabled/disabled toggle field.
+     * 
+     * @since 1.2.7
      */
     public function enabled_callback() {
         $settings = $this->get_settings();
@@ -222,6 +314,13 @@ class CA_Banners_Settings {
         echo '<p class="description">Toggle to activate or deactivate the banner on your website.</p>';
     }
     
+    /**
+     * Message field callback
+     * 
+     * Renders the banner message field using WordPress editor.
+     * 
+     * @since 1.2.7
+     */
     public function message_callback() {
         $settings = $this->get_settings();
         $message = $settings['message'];
@@ -257,6 +356,13 @@ class CA_Banners_Settings {
         echo '</div>';
     }
     
+    /**
+     * Repeat field callback
+     * 
+     * Renders the message repeat count field with range slider.
+     * 
+     * @since 1.2.7
+     */
     public function repeat_callback() {
         $settings = $this->get_settings();
         $repeat = $settings['repeat'];
@@ -269,6 +375,13 @@ class CA_Banners_Settings {
         echo '</div>';
     }
     
+    /**
+     * Speed field callback
+     * 
+     * Renders the scroll speed field with range slider.
+     * 
+     * @since 1.2.7
+     */
     public function speed_callback() {
         $settings = $this->get_settings();
         $speed = $settings['speed'];
@@ -279,6 +392,19 @@ class CA_Banners_Settings {
         echo '</div>';
         echo '<p class="description">Control how fast the banner message scrolls (10-100 seconds). Lower values = faster scrolling.</p>';
         echo '</div>';
+    }
+    
+    public function sticky_callback() {
+        $settings = $this->get_settings();
+        $sticky = isset($settings['sticky']) ? $settings['sticky'] : 0;
+        echo '<div class="ca-banner-toggle-container">';
+        echo '<label class="ca-banner-toggle">';
+        echo '<input type="checkbox" name="' . self::OPTION_NAME . '[sticky]" value="1"' . checked(1, $sticky, false) . '>';
+        echo '<span class="ca-banner-toggle-slider"></span>';
+        echo '</label>';
+        echo '<span class="ca-banner-toggle-label">' . ($sticky ? 'Sticky' : 'Not Sticky') . '</span>';
+        echo '</div>';
+        echo '<p class="description">Make the banner stick to the top when scrolling.</p>';
     }
     
     public function background_color_callback() {
@@ -298,6 +424,15 @@ class CA_Banners_Settings {
         echo '<p class="description">Choose the text color for your banner.</p>';
         echo '</div>';
     }
+
+    public function link_color_callback() {
+        $settings = $this->get_settings();
+        $link_color = isset($settings['link_color']) ? $settings['link_color'] : '#0000ff';
+        echo '<div class="ca-banner-form-group">';
+        echo '<input type="color" name="' . self::OPTION_NAME . '[link_color]" id="banner_link_color" class="ca-banner-color-picker" value="' . esc_attr($link_color) . '">';
+        echo '<p class="description">Choose the color for links in your banner message.</p>';
+        echo '</div>';
+    }
     
     public function font_size_callback() {
         $settings = $this->get_settings();
@@ -315,6 +450,7 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $font_family = $settings['font_family'];
         $font_options = array(
+            'inherit' => 'Inherit from Theme',
             'Arial' => 'Arial',
             'Helvetica' => 'Helvetica',
             'Times New Roman' => 'Times New Roman',
@@ -406,9 +542,26 @@ class CA_Banners_Settings {
         echo '</div>';
     }
     
+    public function vertical_padding_callback() {
+        $settings = $this->get_settings();
+        $vertical_padding = isset($settings['vertical_padding']) ? $settings['vertical_padding'] : 10;
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[vertical_padding]" id="banner_vertical_padding" class="ca-banner-range" value="' . esc_attr($vertical_padding) . '" min="0" max="50" oninput="document.getElementById(\'vertical-padding-value\').textContent = this.value + \'px\'">';
+        echo '<span class="ca-banner-range-value" id="vertical-padding-value">' . esc_attr($vertical_padding) . 'px</span>';
+        echo '</div>';
+        echo '<p class="description">Adjust the top and bottom padding of the banner symmetrically (0-50px). This controls the banner height.</p>';
+        echo '</div>';
+    }
+    
     public function sitewide_callback() {
         $settings = $this->get_settings();
         $sitewide = $settings['sitewide'];
+        
+        // Ensure a default value is always set (default to sitewide = true)
+        if ($sitewide === null || $sitewide === '') {
+            $sitewide = true;
+        }
         
         echo '<div class="ca-banner-form-group">';
         echo '<p class="description" style="margin-bottom: 15px;"><strong>Choose how you want to control banner visibility:</strong><br>';
@@ -502,14 +655,14 @@ class CA_Banners_Settings {
     public function disable_mobile_callback() {
         $settings = $this->get_settings();
         $disable_mobile = $settings['disable_mobile'];
-        echo '<div class="ca-banner-form-group">';
-        echo '<div class="ca-banner-toggle">';
+        echo '<div class="ca-banner-toggle-container">';
+        echo '<label class="ca-banner-toggle">';
         echo '<input type="checkbox" name="' . self::OPTION_NAME . '[disable_mobile]" id="banner_disable_mobile" value="1"' . checked(1, $disable_mobile, false) . '>';
-        echo '<label for="banner_disable_mobile" class="ca-banner-toggle-slider"></label>';
+        echo '<span class="ca-banner-toggle-slider"></span>';
+        echo '</label>';
         echo '<span class="ca-banner-toggle-label">' . ($disable_mobile ? 'Disabled on Mobile' : 'Enabled on Mobile') . '</span>';
         echo '</div>';
         echo '<p class="description">Hide the banner on mobile devices (screens smaller than 768px wide).</p>';
-        echo '</div>';
     }
     
     public function start_date_callback() {
@@ -566,14 +719,14 @@ class CA_Banners_Settings {
     public function button_enabled_callback() {
         $settings = $this->get_settings();
         $button_enabled = $settings['button_enabled'];
-        echo '<div class="ca-banner-form-group">';
-        echo '<div class="ca-banner-toggle">';
+        echo '<div class="ca-banner-toggle-container">';
+        echo '<label class="ca-banner-toggle">';
         echo '<input type="checkbox" name="' . self::OPTION_NAME . '[button_enabled]" id="banner_button_enabled" value="1"' . checked(1, $button_enabled, false) . '>';
-        echo '<label for="banner_button_enabled" class="ca-banner-toggle-slider"></label>';
+        echo '<span class="ca-banner-toggle-slider"></span>';
+        echo '</label>';
         echo '<span class="ca-banner-toggle-label">' . ($button_enabled ? 'Enabled' : 'Disabled') . '</span>';
         echo '</div>';
         echo '<p class="description">Enable or disable the call-to-action button in your banner.</p>';
-        echo '</div>';
     }
     
     public function button_text_callback() {
@@ -588,9 +741,14 @@ class CA_Banners_Settings {
     public function button_link_callback() {
         $settings = $this->get_settings();
         $button_link = $settings['button_link'];
+        $button_new_window = isset($settings['button_new_window']) ? $settings['button_new_window'] : false;
         echo '<div class="ca-banner-form-group">';
-        echo '<input type="url" name="' . self::OPTION_NAME . '[button_link]" id="banner_button_link" class="ca-banner-input" value="' . esc_attr($button_link) . '" placeholder="https://example.com">';
-        echo '<p class="description">Enter the URL where the button should link to.</p>';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="url" name="' . self::OPTION_NAME . '[button_link]" id="banner_button_link" class="ca-banner-input" value="' . esc_attr($button_link) . '" placeholder="https://example.com" style="flex: 1;">';
+        echo '<input type="checkbox" name="' . self::OPTION_NAME . '[button_new_window]" id="banner_button_new_window" value="1"' . checked(1, $button_new_window, false) . '>';
+        echo '<label for="banner_button_new_window">New window</label>';
+        echo '</div>';
+        echo '<p class="description">Enter the URL where the button should link to. Check to open in new tab.</p>';
         echo '</div>';
     }
     
@@ -690,6 +848,32 @@ class CA_Banners_Settings {
         }
         echo '</select>';
         echo '<p class="description">Choose the font weight for your button text.</p>';
+        echo '</div>';
+    }
+
+    public function button_lock_callback() {
+        $settings = $this->get_settings();
+        $button_lock_enabled = isset($settings['button_lock_enabled']) ? $settings['button_lock_enabled'] : false;
+        $button_lock_position = isset($settings['button_lock_position']) ? $settings['button_lock_position'] : 'left';
+        $button_gap = isset($settings['button_gap']) ? $settings['button_gap'] : 15;
+        
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="margin-bottom: 10px;">';
+        echo '<input type="checkbox" name="' . self::OPTION_NAME . '[button_lock_enabled]" id="banner_button_lock_enabled" value="1"' . checked(1, $button_lock_enabled, false) . '>';
+        echo '<label for="banner_button_lock_enabled">Lock the button to one side of the banner (message scrolls beside it)</label>';
+        echo '</div>';
+        echo '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">';
+        echo '<select name="' . self::OPTION_NAME . '[button_lock_position]" id="banner_button_lock_position" class="ca-banner-select">';
+        echo '<option value="left"' . selected('left', $button_lock_position, false) . '>Left</option>';
+        echo '<option value="right"' . selected('right', $button_lock_position, false) . '>Right</option>';
+        echo '</select>';
+        echo '</div>';
+        echo '<label for="banner_button_gap" style="display: block; margin-bottom: 5px;">Gap from Edge</label>';
+        echo '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[button_gap]" id="banner_button_gap" class="ca-banner-range" value="' . esc_attr($button_gap) . '" min="0" max="50" oninput="document.getElementById(\'button-gap-value\').textContent = this.value + \'px\'">';
+        echo '<span class="ca-banner-range-value" id="button-gap-value">' . esc_attr($button_gap) . 'px</span>';
+        echo '</div>';
+        echo '<p class="description">When enabled, the button will be fixed on the selected side with the specified gap from edge, and appear only once.</p>';
         echo '</div>';
     }
 }

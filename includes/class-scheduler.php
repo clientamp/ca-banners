@@ -18,10 +18,14 @@ class CA_Banners_Scheduler {
     
     /**
      * Check if current time is within date range
-     *
-     * @param string $start_date Start date (datetime-local format)
-     * @param string $end_date End date (datetime-local format)
-     * @return bool True if within date range
+     * 
+     * Validates whether the current time falls within the specified start and end
+     * date range. Returns true if no dates are specified (always active).
+     * 
+     * @since 1.2.7
+     * @param string $start_date Start date in datetime-local format
+     * @param string $end_date End date in datetime-local format
+     * @return bool True if current time is within the date range
      */
     public function is_within_date_range($start_date, $end_date) {
         if (empty($start_date) && empty($end_date)) {
@@ -49,9 +53,13 @@ class CA_Banners_Scheduler {
     
     /**
      * Check if banner should be displayed based on scheduling
-     *
-     * @param array $settings Banner settings
-     * @return bool True if banner should be displayed
+     * 
+     * Determines if a banner should be displayed based on its start and end
+     * date settings from the settings array.
+     * 
+     * @since 1.2.7
+     * @param array $settings Banner settings array
+     * @return bool True if banner should be displayed based on scheduling
      */
     public function is_banner_scheduled($settings) {
         return $this->is_within_date_range(
@@ -62,9 +70,13 @@ class CA_Banners_Scheduler {
     
     /**
      * Check if image banner should be displayed based on scheduling
-     *
-     * @param array $settings Banner settings
-     * @return bool True if image banner should be displayed
+     * 
+     * Determines if an image banner should be displayed based on its start
+     * and end date settings from the settings array.
+     * 
+     * @since 1.2.7
+     * @param array $settings Banner settings array
+     * @return bool True if image banner should be displayed based on scheduling
      */
     public function is_image_banner_scheduled($settings) {
         return $this->is_within_date_range(
@@ -75,10 +87,14 @@ class CA_Banners_Scheduler {
     
     /**
      * Get formatted date for display
-     *
-     * @param string $date Date string
-     * @param string $format Date format
-     * @return string Formatted date
+     * 
+     * Formats a date string using the specified format. Returns the original
+     * string if formatting fails.
+     * 
+     * @since 1.2.7
+     * @param string $date Date string to format
+     * @param string $format Date format string (default: 'Y-m-d H:i')
+     * @return string Formatted date string
      */
     public function format_date($date, $format = 'Y-m-d H:i') {
         if (empty($date)) {
@@ -95,9 +111,13 @@ class CA_Banners_Scheduler {
     
     /**
      * Get time until banner starts
-     *
-     * @param string $start_date Start date
-     * @return string Time until start
+     * 
+     * Calculates the time remaining until a banner should start displaying.
+     * Returns empty string if banner has already started or no start date.
+     * 
+     * @since 1.2.7
+     * @param string $start_date Start date string
+     * @return string Human-readable time until start
      */
     public function get_time_until_start($start_date) {
         if (empty($start_date)) {
@@ -114,11 +134,11 @@ class CA_Banners_Scheduler {
         $diff = $start_timestamp - $current_timestamp;
         
         if ($diff < 3600) {
-            return sprintf(__('%d minutes', 'ca-banners'), round($diff / 60));
+            return sprintf(__('%d minutes', CA_Banners_Constants::TEXT_DOMAIN), round($diff / 60));
         } elseif ($diff < 86400) {
-            return sprintf(__('%d hours', 'ca-banners'), round($diff / 3600));
+            return sprintf(__('%d hours', CA_Banners_Constants::TEXT_DOMAIN), round($diff / 3600));
         } else {
-            return sprintf(__('%d days', 'ca-banners'), round($diff / 86400));
+            return sprintf(__('%d days', CA_Banners_Constants::TEXT_DOMAIN), round($diff / 86400));
         }
     }
     
@@ -143,11 +163,11 @@ class CA_Banners_Scheduler {
         $diff = $end_timestamp - $current_timestamp;
         
         if ($diff < 3600) {
-            return sprintf(__('%d minutes', 'ca-banners'), round($diff / 60));
+            return sprintf(__('%d minutes', CA_Banners_Constants::TEXT_DOMAIN), round($diff / 60));
         } elseif ($diff < 86400) {
-            return sprintf(__('%d hours', 'ca-banners'), round($diff / 3600));
+            return sprintf(__('%d hours', CA_Banners_Constants::TEXT_DOMAIN), round($diff / 3600));
         } else {
-            return sprintf(__('%d days', 'ca-banners'), round($diff / 86400));
+            return sprintf(__('%d days', CA_Banners_Constants::TEXT_DOMAIN), round($diff / 86400));
         }
     }
 }
