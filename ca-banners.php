@@ -89,9 +89,6 @@ function banner_plugin_settings_page() {
     ?>
     <div class="wrap">
         <h1>CA Banners Settings</h1>
-        <div class="notice notice-info">
-            <p><strong>Need help?</strong> Check the "Quick Start Guide" tab above for step-by-step instructions.</p>
-        </div>
         <form method="post" action="options.php">
             <?php
             settings_fields('banner_plugin_settings');
