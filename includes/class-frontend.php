@@ -42,11 +42,16 @@ class CA_Banners_Frontend {
      * Render banner
      */
     public function render_banner() {
-        $ca_banners = CA_Banners::get_instance();
         $settings = get_option('banner_plugin_settings');
         
+        // Create validator instance if not available
+        if (!class_exists('CA_Banners_Validator')) {
+            require_once CA_BANNERS_PLUGIN_DIR . 'includes/class-validator.php';
+        }
+        $validator = new CA_Banners_Validator();
+        
         // Validate and sanitize settings
-        $validated_settings = $ca_banners->validator->validate_settings($settings);
+        $validated_settings = $validator->validate_settings($settings);
         
         if (!$validated_settings['enabled'] || empty($validated_settings['message'])) {
             return;
@@ -76,16 +81,25 @@ class CA_Banners_Frontend {
         $exclude_urls = $validated_settings['exclude_urls'];
         
         // Check scheduling
-        if (!$ca_banners->scheduler->is_banner_scheduled($validated_settings)) {
+        if (!class_exists('CA_Banners_Scheduler')) {
+            require_once CA_BANNERS_PLUGIN_DIR . 'includes/class-scheduler.php';
+        }
+        $scheduler = new CA_Banners_Scheduler();
+        if (!$scheduler->is_banner_scheduled($validated_settings)) {
             return;
         }
         
         // Check URL matching
+        if (!class_exists('CA_Banners_URL_Matcher')) {
+            require_once CA_BANNERS_PLUGIN_DIR . 'includes/class-url-matcher.php';
+        }
+        $url_matcher = new CA_Banners_URL_Matcher();
+        
         $current_url_raw = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
         $current_url_raw = strtok($current_url_raw, '?'); // Remove query parameters
         $current_url_raw = strtok($current_url_raw, '#'); // Remove fragments
         
-        if (!$ca_banners->url_matcher->should_display_banner($current_url_raw, $sitewide, $urls, $exclude_urls)) {
+        if (!$url_matcher->should_display_banner($current_url_raw, $sitewide, $urls, $exclude_urls)) {
             return;
         }
         
@@ -93,7 +107,7 @@ class CA_Banners_Frontend {
         if (current_user_can('manage_options') && defined('WP_DEBUG') && WP_DEBUG) {
             echo '<!-- CA Banner Debug Info: ';
             echo 'Version: ' . CA_BANNERS_VERSION . ', ';
-            echo 'Current URL: ' . esc_html($ca_banners->url_matcher->normalize_url($current_url_raw)) . ', ';
+            echo 'Current URL: ' . esc_html($url_matcher->normalize_url($current_url_raw)) . ', ';
             echo 'Raw URL: ' . esc_html($current_url_raw) . ', ';
             echo 'Sitewide Mode: ' . ($sitewide ? 'Yes' : 'No') . ', ';
             echo 'Should Display: Yes, ';
