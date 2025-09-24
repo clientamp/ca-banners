@@ -81,10 +81,10 @@ class CA_Banners_Settings {
 
         // Display Settings Section
         add_settings_section('banner_display_section', 'Display Settings', array($this, 'display_section_callback'), 'banner-plugin');
-        add_settings_field('banner_sitewide', 'Display Sitewide', array($this, 'sitewide_callback'), 'banner-plugin', 'banner_display_section');
-        add_settings_field('banner_urls', 'Display on Pages', array($this, 'urls_callback'), 'banner-plugin', 'banner_display_section');
-        add_settings_field('banner_exclude_urls', 'Exclude on Pages', array($this, 'exclude_urls_callback'), 'banner-plugin', 'banner_display_section');
-        add_settings_field('banner_disable_mobile', 'Disable on Mobile', array($this, 'disable_mobile_callback'), 'banner-plugin', 'banner_display_section');
+        add_settings_field('banner_sitewide', 'Banner Visibility', array($this, 'sitewide_callback'), 'banner-plugin', 'banner_display_section');
+        add_settings_field('banner_urls', 'Include Pages', array($this, 'urls_callback'), 'banner-plugin', 'banner_display_section');
+        add_settings_field('banner_exclude_urls', 'Exclude Pages', array($this, 'exclude_urls_callback'), 'banner-plugin', 'banner_display_section');
+        add_settings_field('banner_disable_mobile', 'Mobile Display', array($this, 'disable_mobile_callback'), 'banner-plugin', 'banner_display_section');
 
         // Style Settings Section (renamed from Styling)
         add_settings_section('banner_styling_section', 'Style Settings', array($this, 'styling_section_callback'), 'banner-plugin');
@@ -411,13 +411,13 @@ class CA_Banners_Settings {
         $sitewide = $settings['sitewide'];
         
         echo '<div class="ca-banner-form-group">';
+        echo '<p class="description" style="margin-bottom: 15px;"><strong>Choose how you want to control banner visibility:</strong><br>';
+        echo '• <strong>Sitewide:</strong> Banner appears on all pages except those you exclude<br>';
+        echo '• <strong>Specific pages:</strong> Banner only appears on pages you specify</p>';
         echo '<fieldset>';
         echo '<label><input type="radio" name="' . self::OPTION_NAME . '[sitewide]" id="banner_sitewide_yes" value="1"' . checked(1, $sitewide, false) . '> Display sitewide (all pages)</label><br>';
         echo '<label><input type="radio" name="' . self::OPTION_NAME . '[sitewide]" id="banner_sitewide_no" value="0"' . checked(0, $sitewide, false) . '> Display on specific pages only</label>';
         echo '</fieldset>';
-        echo '<p class="description"><strong>Choose how you want to control banner visibility:</strong><br>';
-        echo '• <strong>Sitewide:</strong> Banner appears on all pages except those you exclude<br>';
-        echo '• <strong>Specific pages:</strong> Banner only appears on pages you specify</p>';
         echo '</div>';
     }
     

@@ -210,15 +210,30 @@ if (sitewideNo) {
         }
     });
     
-    // Initial preview update with delay to ensure DOM is ready
-    setTimeout(function() {
+    // Initial preview update with multiple attempts to ensure it works
+    function initializePreview() {
         updatePreview();
-    }, 100);
+        
+        // Try again after a short delay
+        setTimeout(function() {
+            updatePreview();
+        }, 200);
+        
+        // Also try on window load as fallback
+        window.addEventListener('load', function() {
+            updatePreview();
+        });
+    }
     
-    // Also update on window load as fallback
-    window.addEventListener('load', function() {
-        updatePreview();
-    });
+    // Try multiple initialization methods
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializePreview);
+    } else {
+        initializePreview();
+    }
+    
+    // Fallback initialization
+    setTimeout(initializePreview, 100);
     
     // Image upload functionality
     var uploadButton = document.getElementById('upload_image_button');
