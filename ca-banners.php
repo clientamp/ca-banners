@@ -87,15 +87,90 @@ function banner_plugin_settings_page() {
     ));
     
     ?>
-    <div class="wrap">
+    <div class="wrap ca-banner-admin-wrap">
         <h1>CA Banners Settings</h1>
-        <form method="post" action="options.php">
-            <?php
-            settings_fields('banner_plugin_settings');
-            do_settings_sections('banner-plugin');
-            submit_button();
-            echo '</form>';
-            echo '</div>';
+        
+        <form method="post" action="options.php" id="ca-banner-settings-form">
+            <?php settings_fields('banner_plugin_settings'); ?>
+            
+            <!-- Basic Settings Card -->
+            <div class="ca-banner-card">
+                <div class="ca-banner-card-header">
+                    <svg class="ca-banner-card-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <h2 class="ca-banner-card-title">Basic Settings</h2>
+                </div>
+                <div class="ca-banner-card-content">
+                    <?php do_settings_fields('banner-plugin', 'banner_basic_section'); ?>
+                </div>
+            </div>
+            
+            <!-- Display Settings Card -->
+            <div class="ca-banner-card">
+                <div class="ca-banner-card-header">
+                    <svg class="ca-banner-card-icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <h2 class="ca-banner-card-title">Display Settings</h2>
+                </div>
+                <div class="ca-banner-card-content">
+                    <?php do_settings_fields('banner-plugin', 'banner_display_section'); ?>
+                </div>
+            </div>
+            
+            <!-- Styling Settings Card -->
+            <div class="ca-banner-card">
+                <div class="ca-banner-card-header">
+                    <svg class="ca-banner-card-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"/>
+                    </svg>
+                    <h2 class="ca-banner-card-title">Styling Settings</h2>
+                </div>
+                <div class="ca-banner-card-content">
+                    <?php do_settings_fields('banner-plugin', 'banner_styling_section'); ?>
+                    
+                    <!-- Live Preview -->
+                    <div class="ca-banner-preview">
+                        <span class="ca-banner-preview-label">Live Preview</span>
+                        <div class="ca-banner-preview-content" id="ca-banner-preview-content">
+                            Your banner message will appear here...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scheduling Settings Card -->
+            <div class="ca-banner-card">
+                <div class="ca-banner-card-header">
+                    <svg class="ca-banner-card-icon" viewBox="0 0 24 24">
+                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                    </svg>
+                    <h2 class="ca-banner-card-title">Scheduling Settings</h2>
+                </div>
+                <div class="ca-banner-card-content">
+                    <?php do_settings_fields('banner-plugin', 'banner_scheduling_section'); ?>
+                </div>
+            </div>
+            
+            <!-- Image Banner Settings Card -->
+            <div class="ca-banner-card">
+                <div class="ca-banner-card-header">
+                    <svg class="ca-banner-card-icon" viewBox="0 0 24 24">
+                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                    </svg>
+                    <h2 class="ca-banner-card-title">Image Banner Settings</h2>
+                </div>
+                <div class="ca-banner-card-content">
+                    <?php do_settings_fields('banner-plugin', 'banner_image_section'); ?>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <?php submit_button('Save Changes', 'primary', 'submit', false, array('id' => 'ca-banner-save-btn')); ?>
+            </div>
+        </form>
+    </div>
 }
 
 // Register plugin settings
@@ -256,33 +331,57 @@ function banner_plugin_enabled_callback() {
 function banner_plugin_message_callback() {
     $settings = get_option('banner_plugin_settings');
     $message = isset($settings['message']) ? $settings['message'] : '';
-    echo '<textarea name="banner_plugin_settings[message]" rows="4" cols="50" placeholder="Enter your banner message here...">' . esc_html($message) . '</textarea>';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_message">Banner Message</label>';
+    echo '<textarea name="banner_plugin_settings[message]" id="banner_message" class="ca-banner-textarea" rows="4" placeholder="Enter your banner message here...">' . esc_html($message) . '</textarea>';
     echo '<p class="description">Enter the text you want to display in your scrolling banner. This message will repeat across the banner.<br><strong>HTML/CSS Support:</strong> You can use HTML tags and inline CSS styles for formatting. Examples: <code>&lt;strong&gt;Bold text&lt;/strong&gt;</code>, <code>&lt;span style="color: red;"&gt;Red text&lt;/span&gt;</code>, <code>&lt;em&gt;Italic text&lt;/em&gt;</code></p>';
+    echo '</div>';
 }
 
 function banner_plugin_repeat_callback() {
     $settings = get_option('banner_plugin_settings');
     $repeat = isset($settings['repeat']) ? $settings['repeat'] : '10';
-    echo '<input type="number" name="banner_plugin_settings[repeat]" value="' . esc_attr($repeat) . '" min="1" max="100">';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_repeat">Message Repeats</label>';
+    echo '<div style="display: flex; align-items: center; gap: 10px;">';
+    echo '<input type="range" name="banner_plugin_settings[repeat]" id="banner_repeat" class="ca-banner-range" value="' . esc_attr($repeat) . '" min="1" max="100" oninput="document.getElementById(\'repeat-value\').textContent = this.value">';
+    echo '<span class="ca-banner-range-value" id="repeat-value">' . esc_attr($repeat) . '</span>';
+    echo '</div>';
     echo '<p class="description">How many times to repeat your message across the banner (1-100). More repeats create a longer scrolling effect.</p>';
+    echo '</div>';
 }
 
 function banner_plugin_background_color_callback() {
     $settings = get_option('banner_plugin_settings');
     $background_color = isset($settings['background_color']) ? $settings['background_color'] : '#729946';
-    echo '<input type="color" name="banner_plugin_settings[background_color]" value="' . esc_attr($background_color) . '">';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_background_color">Background Color</label>';
+    echo '<input type="color" name="banner_plugin_settings[background_color]" id="banner_background_color" class="ca-banner-color-picker" value="' . esc_attr($background_color) . '">';
+    echo '<p class="description">Choose the background color for your banner.</p>';
+    echo '</div>';
 }
 
 function banner_plugin_text_color_callback() {
     $settings = get_option('banner_plugin_settings');
     $text_color = isset($settings['text_color']) ? $settings['text_color'] : '#000000';
-    echo '<input type="color" name="banner_plugin_settings[text_color]" value="' . esc_attr($text_color) . '">';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_text_color">Text Color</label>';
+    echo '<input type="color" name="banner_plugin_settings[text_color]" id="banner_text_color" class="ca-banner-color-picker" value="' . esc_attr($text_color) . '">';
+    echo '<p class="description">Choose the text color for your banner.</p>';
+    echo '</div>';
 }
 
 function banner_plugin_font_size_callback() {
     $settings = get_option('banner_plugin_settings');
     $font_size = isset($settings['font_size']) ? $settings['font_size'] : '16';
-    echo '<input type="number" name="banner_plugin_settings[font_size]" value="' . esc_attr($font_size) . '" min="10" max="40">';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_font_size">Font Size</label>';
+    echo '<div style="display: flex; align-items: center; gap: 10px;">';
+    echo '<input type="range" name="banner_plugin_settings[font_size]" id="banner_font_size" class="ca-banner-range" value="' . esc_attr($font_size) . '" min="10" max="40" oninput="document.getElementById(\'font-size-value\').textContent = this.value + \'px\'">';
+    echo '<span class="ca-banner-range-value" id="font-size-value">' . esc_attr($font_size) . 'px</span>';
+    echo '</div>';
+    echo '<p class="description">Adjust the font size for your banner text (10-40px).</p>';
+    echo '</div>';
 }
 
 function banner_plugin_font_family_callback() {
@@ -302,18 +401,29 @@ function banner_plugin_font_family_callback() {
         'Raleway' => 'Raleway'
     );
 
-    echo '<select name="banner_plugin_settings[font_family]">';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_font_family">Font Family</label>';
+    echo '<select name="banner_plugin_settings[font_family]" id="banner_font_family" class="ca-banner-select">';
     foreach ($font_options as $value => $label) {
         $selected = ($font_family === $value) ? 'selected' : '';
         echo '<option value="' . esc_attr($value) . '" ' . $selected . '>' . $label . '</option>';
     }
     echo '</select>';
+    echo '<p class="description">Choose the font family for your banner text.</p>';
+    echo '</div>';
 }
 
 function banner_plugin_border_width_callback() {
     $settings = get_option('banner_plugin_settings');
     $border_width = isset($settings['border_width']) ? $settings['border_width'] : '0';
-    echo '<input type="number" name="banner_plugin_settings[border_width]" value="' . esc_attr($border_width) . '" min="0" max="10">';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_border_width">Border Width</label>';
+    echo '<div style="display: flex; align-items: center; gap: 10px;">';
+    echo '<input type="range" name="banner_plugin_settings[border_width]" id="banner_border_width" class="ca-banner-range" value="' . esc_attr($border_width) . '" min="0" max="10" oninput="document.getElementById(\'border-width-value\').textContent = this.value + \'px\'">';
+    echo '<span class="ca-banner-range-value" id="border-width-value">' . esc_attr($border_width) . 'px</span>';
+    echo '</div>';
+    echo '<p class="description">Set the border width for your banner (0-10px).</p>';
+    echo '</div>';
 }
 
 function banner_plugin_border_style_callback() {
@@ -327,18 +437,26 @@ function banner_plugin_border_style_callback() {
         'none' => 'None'
     );
 
-    echo '<select name="banner_plugin_settings[border_style]">';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_border_style">Border Style</label>';
+    echo '<select name="banner_plugin_settings[border_style]" id="banner_border_style" class="ca-banner-select">';
     foreach ($style_options as $value => $label) {
         $selected = ($border_style === $value) ? 'selected' : '';
         echo '<option value="' . esc_attr($value) . '" ' . $selected . '>' . $label . '</option>';
     }
     echo '</select>';
+    echo '<p class="description">Choose the border style for your banner.</p>';
+    echo '</div>';
 }
 
 function banner_plugin_border_color_callback() {
     $settings = get_option('banner_plugin_settings');
     $border_color = isset($settings['border_color']) ? $settings['border_color'] : '#000000';
-    echo '<input type="color" name="banner_plugin_settings[border_color]" value="' . esc_attr($border_color) . '">';
+    echo '<div class="ca-banner-form-group">';
+    echo '<label for="banner_border_color">Border Color</label>';
+    echo '<input type="color" name="banner_plugin_settings[border_color]" id="banner_border_color" class="ca-banner-color-picker" value="' . esc_attr($border_color) . '">';
+    echo '<p class="description">Choose the border color for your banner.</p>';
+    echo '</div>';
 }
 
 function banner_plugin_disable_mobile_callback() {
@@ -519,21 +637,64 @@ function banner_plugin_admin_scripts() {
 }
 add_action('admin_enqueue_scripts', 'banner_plugin_admin_scripts');
 
-// Admin styles for toggle switch
+// Admin styles for modern interface
 function banner_plugin_admin_styles() {
     ?>
     <style>
+    /* Modern Card Layout */
+    .ca-banner-admin-wrap {
+        max-width: 1200px;
+        margin: 20px 0;
+    }
+    
+    .ca-banner-card {
+        background: #fff;
+        border: 1px solid #c3c4c7;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    
+    .ca-banner-card-header {
+        background: #f6f7f7;
+        border-bottom: 1px solid #c3c4c7;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .ca-banner-card-icon {
+        width: 24px;
+        height: 24px;
+        fill: #2271b1;
+    }
+    
+    .ca-banner-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1d2327;
+        margin: 0;
+    }
+    
+    .ca-banner-card-content {
+        padding: 20px;
+    }
+    
+    /* Toggle Switch */
     .ca-banner-toggle-container {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
+        margin-bottom: 8px;
     }
     
     .ca-banner-toggle {
         position: relative;
         display: inline-block;
-        width: 40px;
-        height: 22px;
+        width: 44px;
+        height: 24px;
     }
     
     .ca-banner-toggle input {
@@ -549,38 +710,230 @@ function banner_plugin_admin_styles() {
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #ccc;
-        transition: .4s;
-        border-radius: 34px;
+        background-color: #ddd;
+        transition: .3s;
+        border-radius: 24px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
     
     .ca-banner-toggle-slider:before {
         position: absolute;
         content: "";
-        height: 16px;
-        width: 16px;
+        height: 18px;
+        width: 18px;
         left: 3px;
         bottom: 3px;
         background-color: white;
-        transition: .4s;
+        transition: .3s;
         border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     
     .ca-banner-toggle input:checked + .ca-banner-toggle-slider {
-        background-color: #2196F3;
+        background-color: #2271b1;
     }
     
     .ca-banner-toggle input:checked + .ca-banner-toggle-slider:before {
-        transform: translateX(18px);
+        transform: translateX(20px);
     }
     
     .ca-banner-toggle-label {
         font-weight: 600;
-        color: #333;
+        color: #1d2327;
+        font-size: 14px;
     }
     
     .ca-banner-toggle input:checked ~ .ca-banner-toggle-label {
-        color: #2196F3;
+        color: #2271b1;
+    }
+    
+    /* Form Controls */
+    .ca-banner-form-group {
+        margin-bottom: 20px;
+    }
+    
+    .ca-banner-form-group label {
+        display: block;
+        font-weight: 600;
+        color: #1d2327;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+    
+    .ca-banner-form-group .description {
+        margin-top: 6px;
+        font-size: 13px;
+        color: #646970;
+        line-height: 1.4;
+    }
+    
+    .ca-banner-textarea {
+        width: 100%;
+        max-width: 600px;
+        padding: 12px;
+        border: 1px solid #8c8f94;
+        border-radius: 4px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .ca-banner-textarea:focus {
+        border-color: #2271b1;
+        box-shadow: 0 0 0 1px #2271b1;
+        outline: none;
+    }
+    
+    .ca-banner-input {
+        width: 100%;
+        max-width: 200px;
+        padding: 8px 12px;
+        border: 1px solid #8c8f94;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .ca-banner-input:focus {
+        border-color: #2271b1;
+        box-shadow: 0 0 0 1px #2271b1;
+        outline: none;
+    }
+    
+    .ca-banner-select {
+        width: 100%;
+        max-width: 200px;
+        padding: 8px 12px;
+        border: 1px solid #8c8f94;
+        border-radius: 4px;
+        font-size: 14px;
+        background: white;
+    }
+    
+    .ca-banner-select:focus {
+        border-color: #2271b1;
+        box-shadow: 0 0 0 1px #2271b1;
+        outline: none;
+    }
+    
+    /* Color Picker */
+    .ca-banner-color-picker {
+        width: 50px;
+        height: 40px;
+        border: 1px solid #8c8f94;
+        border-radius: 4px;
+        cursor: pointer;
+        background: none;
+        padding: 0;
+    }
+    
+    .ca-banner-color-picker::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+    
+    .ca-banner-color-picker::-webkit-color-swatch {
+        border: none;
+        border-radius: 3px;
+    }
+    
+    /* Range Slider */
+    .ca-banner-range {
+        width: 100%;
+        max-width: 200px;
+        height: 6px;
+        border-radius: 3px;
+        background: #ddd;
+        outline: none;
+        -webkit-appearance: none;
+    }
+    
+    .ca-banner-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #2271b1;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .ca-banner-range::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #2271b1;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .ca-banner-range-value {
+        display: inline-block;
+        margin-left: 10px;
+        font-weight: 600;
+        color: #2271b1;
+        min-width: 30px;
+    }
+    
+    /* Live Preview */
+    .ca-banner-preview {
+        background: #f6f7f7;
+        border: 1px solid #c3c4c7;
+        border-radius: 4px;
+        padding: 20px;
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ca-banner-preview-label {
+        font-weight: 600;
+        color: #1d2327;
+        margin-bottom: 12px;
+        display: block;
+    }
+    
+    .ca-banner-preview-content {
+        background: #729946;
+        color: #000;
+        padding: 10px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        border-radius: 4px;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+    }
+    
+    .ca-banner-preview-content::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+        animation: ca-banner-preview-shimmer 2s infinite;
+    }
+    
+    @keyframes ca-banner-preview-shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+    
+    /* Responsive */
+    @media (max-width: 782px) {
+        .ca-banner-card-content {
+            padding: 16px;
+        }
+        
+        .ca-banner-form-group {
+            margin-bottom: 16px;
+        }
     }
     </style>
     <?php
@@ -591,6 +944,45 @@ function banner_plugin_admin_footer_scripts() {
     ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Live Preview Functionality
+        function updatePreview() {
+            const message = document.getElementById('banner_message')?.value || 'Your banner message will appear here...';
+            const backgroundColor = document.getElementById('banner_background_color')?.value || '#729946';
+            const textColor = document.getElementById('banner_text_color')?.value || '#000000';
+            const fontSize = document.getElementById('banner_font_size')?.value || '16';
+            const fontFamily = document.getElementById('banner_font_family')?.value || 'Arial';
+            
+            const previewContent = document.getElementById('ca-banner-preview-content');
+            if (previewContent) {
+                previewContent.style.backgroundColor = backgroundColor;
+                previewContent.style.color = textColor;
+                previewContent.style.fontSize = fontSize + 'px';
+                previewContent.style.fontFamily = fontFamily;
+                previewContent.innerHTML = message;
+            }
+        }
+        
+        // Add event listeners for live preview
+        const previewInputs = [
+            'banner_message',
+            'banner_background_color', 
+            'banner_text_color',
+            'banner_font_size',
+            'banner_font_family'
+        ];
+        
+        previewInputs.forEach(function(inputId) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('input', updatePreview);
+                input.addEventListener('change', updatePreview);
+            }
+        });
+        
+        // Initial preview update
+        updatePreview();
+        
+        // Image upload functionality
         var uploadButton = document.getElementById('upload_image_button');
         var imageInput = document.querySelector('input[name="banner_plugin_settings[image]"]');
 
