@@ -108,14 +108,14 @@
 
 /* Form Controls */
 .ca-banner-form-group {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .ca-banner-form-group label {
     display: block;
     font-weight: 600;
     color: #1d2327;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-size: 14px;
 }
 

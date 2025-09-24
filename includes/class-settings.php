@@ -203,7 +203,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $message = $settings['message'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_message">Banner Message</label>';
         
         // Use WordPress editor instead of textarea
         wp_editor($message, 'banner_message', array(
@@ -239,7 +238,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $repeat = $settings['repeat'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_repeat">Message Repeats</label>';
         echo '<div style="display: flex; align-items: center; gap: 10px;">';
         echo '<input type="range" name="' . self::OPTION_NAME . '[repeat]" id="banner_repeat" class="ca-banner-range" value="' . esc_attr($repeat) . '" min="1" max="100" oninput="document.getElementById(\'repeat-value\').textContent = this.value">';
         echo '<span class="ca-banner-range-value" id="repeat-value">' . esc_attr($repeat) . '</span>';
@@ -252,7 +250,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $background_color = $settings['background_color'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_background_color">Background Color</label>';
         echo '<input type="color" name="' . self::OPTION_NAME . '[background_color]" id="banner_background_color" class="ca-banner-color-picker" value="' . esc_attr($background_color) . '">';
         echo '<p class="description">Choose the background color for your banner.</p>';
         echo '</div>';
@@ -262,7 +259,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $text_color = $settings['text_color'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_text_color">Text Color</label>';
         echo '<input type="color" name="' . self::OPTION_NAME . '[text_color]" id="banner_text_color" class="ca-banner-color-picker" value="' . esc_attr($text_color) . '">';
         echo '<p class="description">Choose the text color for your banner.</p>';
         echo '</div>';
@@ -272,7 +268,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $font_size = $settings['font_size'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_font_size">Font Size</label>';
         echo '<div style="display: flex; align-items: center; gap: 10px;">';
         echo '<input type="range" name="' . self::OPTION_NAME . '[font_size]" id="banner_font_size" class="ca-banner-range" value="' . esc_attr($font_size) . '" min="10" max="40" oninput="document.getElementById(\'font-size-value\').textContent = this.value + \'px\'">';
         echo '<span class="ca-banner-range-value" id="font-size-value">' . esc_attr($font_size) . 'px</span>';
@@ -299,7 +294,6 @@ class CA_Banners_Settings {
         );
 
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_font_family">Font Family</label>';
         echo '<select name="' . self::OPTION_NAME . '[font_family]" id="banner_font_family" class="ca-banner-select">';
         foreach ($font_options as $value => $label) {
             $selected = ($font_family === $value) ? 'selected' : '';
@@ -314,7 +308,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $border_width = $settings['border_width'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_border_width">Border Width</label>';
         echo '<div style="display: flex; align-items: center; gap: 10px;">';
         echo '<input type="range" name="' . self::OPTION_NAME . '[border_width]" id="banner_border_width" class="ca-banner-range" value="' . esc_attr($border_width) . '" min="0" max="10" oninput="document.getElementById(\'border-width-value\').textContent = this.value + \'px\'">';
         echo '<span class="ca-banner-range-value" id="border-width-value">' . esc_attr($border_width) . 'px</span>';
@@ -335,7 +328,6 @@ class CA_Banners_Settings {
         );
 
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_border_style">Border Style</label>';
         echo '<select name="' . self::OPTION_NAME . '[border_style]" id="banner_border_style" class="ca-banner-select">';
         foreach ($style_options as $value => $label) {
             $selected = ($border_style === $value) ? 'selected' : '';
@@ -350,7 +342,6 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $border_color = $settings['border_color'];
         echo '<div class="ca-banner-form-group">';
-        echo '<label for="banner_border_color">Border Color</label>';
         echo '<input type="color" name="' . self::OPTION_NAME . '[border_color]" id="banner_border_color" class="ca-banner-color-picker" value="' . esc_attr($border_color) . '">';
         echo '<p class="description">Choose the border color for your banner.</p>';
         echo '</div>';
