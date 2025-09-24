@@ -77,6 +77,7 @@ class CA_Banners_Settings {
         add_settings_field('banner_enabled', 'Enable Banner', array($this, 'enabled_callback'), 'banner-plugin', 'banner_basic_section');
         add_settings_field('banner_message', 'Banner Message', array($this, 'message_callback'), 'banner-plugin', 'banner_basic_section');
         add_settings_field('banner_repeat', 'Message Repeats', array($this, 'repeat_callback'), 'banner-plugin', 'banner_basic_section');
+        add_settings_field('banner_speed', 'Scroll Speed', array($this, 'speed_callback'), 'banner-plugin', 'banner_basic_section');
 
         // Display Settings Section
         add_settings_section('banner_display_section', 'Display Settings', array($this, 'display_section_callback'), 'banner-plugin');
@@ -244,6 +245,18 @@ class CA_Banners_Settings {
         echo '<span class="ca-banner-range-value" id="repeat-value">' . esc_attr($repeat) . '</span>';
         echo '</div>';
         echo '<p class="description">How many times to repeat your message across the banner (1-100). More repeats create a longer scrolling effect.</p>';
+        echo '</div>';
+    }
+    
+    public function speed_callback() {
+        $settings = $this->get_settings();
+        $speed = $settings['speed'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[speed]" id="banner_speed" class="ca-banner-range" value="' . esc_attr($speed) . '" min="30" max="300" oninput="document.getElementById(\'speed-value\').textContent = this.value + \'s\'">';
+        echo '<span class="ca-banner-range-value" id="speed-value">' . esc_attr($speed) . 's</span>';
+        echo '</div>';
+        echo '<p class="description">Control how fast the banner message scrolls (30-300 seconds). Lower values = faster scrolling.</p>';
         echo '</div>';
     }
     

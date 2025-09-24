@@ -134,7 +134,7 @@ class CA_Banners_Frontend {
             echo ' -->';
         }
         
-        $this->render_banner_script($message, $repeat, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date);
+        $this->render_banner_script($message, $repeat, $speed, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date);
     }
     
     /**
@@ -163,6 +163,7 @@ class CA_Banners_Frontend {
         // Simple banner rendering (like original)
         $message = $settings['message'];
         $repeat = isset($settings['repeat']) ? intval($settings['repeat']) : 10;
+        $speed = isset($settings['speed']) ? intval($settings['speed']) : 120;
         $background_color = isset($settings['background_color']) ? $settings['background_color'] : '#729946';
         $text_color = isset($settings['text_color']) ? $settings['text_color'] : '#000000';
         $font_size = isset($settings['font_size']) ? intval($settings['font_size']) : 16;
@@ -182,6 +183,7 @@ class CA_Banners_Frontend {
         echo '<script>';
         echo 'var caBannerConfig = {';
         echo 'message: ' . json_encode($repeated_message) . ',';
+        echo 'speed: ' . $speed . ',';
         echo 'backgroundColor: "' . esc_js($background_color) . '",';
         echo 'textColor: "' . esc_js($text_color) . '",';
         echo 'fontSize: ' . $font_size . ',';
@@ -246,7 +248,7 @@ class CA_Banners_Frontend {
                 if (!document.querySelector('#ca-banner-animation-style')) {
                     var style = document.createElement('style');
                     style.id = 'ca-banner-animation-style';
-                    style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } } .ca-banner-content { animation: ca-banner-marquee 120s linear infinite !important; }';
+                    style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } } .ca-banner-content { animation: ca-banner-marquee ' + caBannerConfig.speed + 's linear infinite !important; }';
                     document.head.appendChild(style);
                 }
                 
@@ -284,11 +286,12 @@ class CA_Banners_Frontend {
     /**
      * Render banner JavaScript
      */
-    private function render_banner_script($message, $repeat, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date) {
+    private function render_banner_script($message, $repeat, $speed, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date) {
         echo '<script>';
         echo 'var caBannerConfig = {';
         echo 'message: ' . json_encode($message . ' &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ') . ',';
         echo 'repeat: ' . intval($repeat) . ',';
+        echo 'speed: ' . intval($speed) . ',';
         echo 'backgroundColor: "' . esc_js($background_color) . '",';
         echo 'textColor: "' . esc_js($text_color) . '",';
         echo 'fontSize: ' . intval($font_size) . ',';
@@ -407,7 +410,7 @@ class CA_Banners_Frontend {
                                 100% { transform: translateX(-100%); }
                             }
                             .ca-banner-content {
-                                animation: ca-banner-marquee 120s linear infinite !important;
+                                animation: ca-banner-marquee ' + (config.speed || 120) + 's linear infinite !important;
                             }
                         `;
                         document.head.appendChild(style);

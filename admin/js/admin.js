@@ -14,6 +14,7 @@ jQuery(document).ready(function($) {
         const fontFamily = document.getElementById('banner_font_family')?.value || 'Arial';
         const fontWeight = document.getElementById('banner_font_weight')?.value || '600';
         const repeat = document.getElementById('banner_repeat')?.value || '10';
+        const speed = document.getElementById('banner_speed')?.value || '120';
         
         const previewContent = document.getElementById('ca-banner-preview-content');
         if (previewContent) {
@@ -30,7 +31,7 @@ jQuery(document).ready(function($) {
             }
             
             // Create scrolling text element
-            previewContent.innerHTML = '<div class="ca-banner-preview-text">' + repeatedMessage + '</div>';
+            previewContent.innerHTML = '<div class="ca-banner-preview-text" style="animation-duration: ' + speed + 's;">' + repeatedMessage + '</div>';
         }
     }
     
@@ -42,7 +43,8 @@ jQuery(document).ready(function($) {
         'banner_font_size',
         'banner_font_family',
         'banner_font_weight',
-        'banner_repeat'
+        'banner_repeat',
+        'banner_speed'
     ];
     
     previewInputs.forEach(function(inputId) {

@@ -43,6 +43,7 @@ class CA_Banners_Validator {
         
         // Numeric fields with validation
         $sanitized['repeat'] = isset($input['repeat']) ? max(1, min(100, intval($input['repeat']))) : 10;
+        $sanitized['speed'] = isset($input['speed']) ? max(30, min(300, intval($input['speed']))) : 120;
         $sanitized['font_size'] = isset($input['font_size']) ? max(10, min(40, intval($input['font_size']))) : 16;
         $sanitized['font_weight'] = isset($input['font_weight']) ? sanitize_text_field($input['font_weight']) : '600';
         $sanitized['border_width'] = isset($input['border_width']) ? max(0, min(10, intval($input['border_width']))) : 0;
