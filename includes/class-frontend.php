@@ -200,61 +200,79 @@ class CA_Banners_Frontend {
                 return;
             }
             
-            // Check if banner already exists
-            if (document.querySelector('.ca-banner-container')) {
-                return;
+            function createBanner() {
+                // Check if banner already exists
+                if (document.querySelector('.ca-banner-container')) {
+                    return;
+                }
+                
+                var banner = document.createElement("div");
+                banner.className = "ca-banner-container";
+                banner.setAttribute('data-ca-banner', 'true');
+                
+                var bannerContent = document.createElement("div");
+                bannerContent.className = "ca-banner-content";
+                bannerContent.innerHTML = caBannerConfig.message;
+                
+                // Apply inline styles
+                banner.style.cssText = [
+                    'position: relative !important',
+                    'top: 0 !important',
+                    'left: 0 !important',
+                    'width: 100% !important',
+                    'background-color: ' + caBannerConfig.backgroundColor + ' !important',
+                    'color: ' + caBannerConfig.textColor + ' !important',
+                    'padding: 10px !important',
+                    'text-align: center !important',
+                    'z-index: 999999 !important',
+                    'overflow: hidden !important',
+                    'font-weight: 600 !important',
+                    'font-size: ' + caBannerConfig.fontSize + 'px !important',
+                    'font-family: "' + caBannerConfig.fontFamily + '", sans-serif !important',
+                    'border-top: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
+                    'border-bottom: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
+                    'margin: 0 !important',
+                    'box-shadow: none !important'
+                ].join('; ');
+                
+                bannerContent.style.display = 'inline-block';
+                bannerContent.style.whiteSpace = 'nowrap';
+                bannerContent.style.margin = '0';
+                bannerContent.style.padding = '0';
+                
+                // Add CSS animation
+                if (!document.querySelector('#ca-banner-animation-style')) {
+                    var style = document.createElement('style');
+                    style.id = 'ca-banner-animation-style';
+                    style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } } .ca-banner-content { animation: ca-banner-marquee 120s linear infinite !important; }';
+                    document.head.appendChild(style);
+                }
+                
+                banner.appendChild(bannerContent);
+                
+                // Insert banner at the beginning of body
+                if (document.body) {
+                    document.body.insertBefore(banner, document.body.firstChild);
+                    console.log('CA Banners: Banner displayed successfully');
+                } else {
+                    // Fallback: wait for body to be ready
+                    setTimeout(createBanner, 100);
+                }
             }
             
-            var banner = document.createElement("div");
-            banner.className = "ca-banner-container";
-            banner.setAttribute('data-ca-banner', 'true');
-            
-            var bannerContent = document.createElement("div");
-            bannerContent.className = "ca-banner-content";
-            bannerContent.innerHTML = caBannerConfig.message;
-            
-            // Apply inline styles
-            banner.style.cssText = [
-                'position: relative !important',
-                'top: 0 !important',
-                'left: 0 !important',
-                'width: 100% !important',
-                'background-color: ' + caBannerConfig.backgroundColor + ' !important',
-                'color: ' + caBannerConfig.textColor + ' !important',
-                'padding: 10px !important',
-                'text-align: center !important',
-                'z-index: 999999 !important',
-                'overflow: hidden !important',
-                'font-weight: 600 !important',
-                'font-size: ' + caBannerConfig.fontSize + 'px !important',
-                'font-family: "' + caBannerConfig.fontFamily + '", sans-serif !important',
-                'border-top: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
-                'border-bottom: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
-                'margin: 0 !important',
-                'box-shadow: none !important'
-            ].join('; ');
-            
-            bannerContent.style.display = 'inline-block';
-            bannerContent.style.whiteSpace = 'nowrap';
-            bannerContent.style.margin = '0';
-            bannerContent.style.padding = '0';
-            
-            // Add CSS animation
-            if (!document.querySelector('#ca-banner-animation-style')) {
-                var style = document.createElement('style');
-                style.id = 'ca-banner-animation-style';
-                style.textContent = '@keyframes ca-banner-marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } } .ca-banner-content { animation: ca-banner-marquee 120s linear infinite !important; }';
-                document.head.appendChild(style);
+            // Try multiple initialization methods
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', createBanner);
+            } else {
+                createBanner();
             }
             
-            banner.appendChild(bannerContent);
+            // Fallback for themes that might interfere
+            setTimeout(createBanner, 100);
+            setTimeout(createBanner, 500);
             
-            // Insert banner at the beginning of body
-            if (document.body) {
-                document.body.insertBefore(banner, document.body.firstChild);
-            }
-            
-            console.log('CA Banners: Banner displayed successfully');
+            // Also try on window load as final fallback
+            window.addEventListener('load', createBanner);
         })();
         
         <?php
@@ -321,6 +339,13 @@ class CA_Banners_Frontend {
 
                     // Check if banner already exists
                     if (document.querySelector('.ca-banner-container')) {
+                        return;
+                    }
+
+                    // Check if body is ready
+                    if (!document.body) {
+                        // Fallback: wait for body to be ready
+                        setTimeout(this.createBanner.bind(this), 100);
                         return;
                     }
 
@@ -391,12 +416,9 @@ class CA_Banners_Frontend {
                     banner.appendChild(bannerContent);
 
                     // Insert banner at the very beginning of body
-                    if (document.body) {
-                        document.body.insertBefore(banner, document.body.firstChild);
-                    } else {
-                        // Fallback: append to document
-                        document.documentElement.appendChild(banner);
-                    }
+                    document.body.insertBefore(banner, document.body.firstChild);
+                    
+                    console.log('CA Banners: Banner displayed successfully');
                 },
                 
                 createBannerImage: function() {
