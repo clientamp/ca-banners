@@ -283,6 +283,62 @@
     100% { transform: translateX(-100%); }
 }
 
+/* Quick Options Styling */
+.ca-banner-quick-options {
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.ca-banner-quick-options h4 {
+    margin: 0 0 10px 0 !important;
+    font-size: 14px !important;
+    color: #1d2327 !important;
+    font-weight: 600 !important;
+}
+
+.ca-banner-quick-options label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    font-size: 13px !important;
+    margin: 0 !important;
+    padding: 5px 8px !important;
+    background: #fff !important;
+    border: 1px solid #c3c4c7 !important;
+    border-radius: 3px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.ca-banner-quick-options label:hover {
+    background: #f0f0f1 !important;
+    border-color: #8c8f94 !important;
+}
+
+.ca-banner-quick-options label input[type="checkbox"] {
+    margin: 0 !important;
+    cursor: pointer !important;
+}
+
+.ca-banner-quick-options label:has(input:checked) {
+    background: #2271b1 !important;
+    color: #fff !important;
+    border-color: #2271b1 !important;
+}
+
+.ca-banner-advanced-urls {
+    margin-top: 15px;
+}
+
+.ca-banner-advanced-urls h4 {
+    margin: 0 0 10px 0 !important;
+    font-size: 14px !important;
+    color: #1d2327 !important;
+    font-weight: 600 !important;
+}
+
 /* Conditional Fields */
 .ca-banner-conditional-field {
     transition: opacity 0.3s ease, max-height 0.3s ease;

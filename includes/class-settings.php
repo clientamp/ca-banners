@@ -416,8 +416,38 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $urls = $settings['urls'];
         echo '<div class="ca-banner-form-group ca-banner-conditional-field" data-depends-on="banner_sitewide" data-show-when="false">';
+        
+        // Quick taxonomy options
+        echo '<div class="ca-banner-quick-options" style="margin-bottom: 15px;">';
+        echo '<h4 style="margin: 0 0 10px 0; font-size: 14px; color: #1d2327;">Quick Options:</h4>';
+        echo '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
+        
+        $quick_options = array(
+            'all_pages' => 'All Pages',
+            'all_posts' => 'All Posts', 
+            'all_products' => 'All Products (WooCommerce)',
+            'home_page' => 'Home Page Only',
+            'blog_page' => 'Blog Page Only'
+        );
+        
+        foreach ($quick_options as $value => $label) {
+            $checked = (strpos($urls, $value) !== false) ? 'checked' : '';
+            echo '<label style="display: flex; align-items: center; gap: 5px; font-size: 13px;">';
+            echo '<input type="checkbox" class="ca-banner-quick-option" data-value="' . esc_attr($value) . '" ' . $checked . '>';
+            echo $label;
+            echo '</label>';
+        }
+        
+        echo '</div>';
+        echo '</div>';
+        
+        // Advanced textarea for custom URLs
+        echo '<div class="ca-banner-advanced-urls">';
+        echo '<h4 style="margin: 0 0 10px 0; font-size: 14px; color: #1d2327;">Custom URLs:</h4>';
         echo '<textarea name="' . self::OPTION_NAME . '[urls]" id="banner_urls" class="ca-banner-textarea" rows="4" placeholder="/about-us/&#10;/contact/&#10;/products/">' . esc_textarea($urls) . '</textarea>';
-        echo '<p class="description"><strong>Include Pages:</strong> Enter one URL per line to display the banner on specific pages. Use relative URLs like <code>/about-us/</code> or <code>/contact/</code>. Leave empty to show on all pages when not using sitewide mode.</p>';
+        echo '<p class="description"><strong>Include Pages:</strong> Enter one URL per line to display the banner on specific pages. Use relative URLs like <code>/about-us/</code> or <code>/contact/</code>. You can also use the quick options above.</p>';
+        echo '</div>';
+        
         echo '</div>';
     }
     
@@ -425,8 +455,38 @@ class CA_Banners_Settings {
         $settings = $this->get_settings();
         $exclude_urls = $settings['exclude_urls'];
         echo '<div class="ca-banner-form-group ca-banner-conditional-field" data-depends-on="banner_sitewide" data-show-when="false">';
+        
+        // Quick exclude options
+        echo '<div class="ca-banner-quick-options" style="margin-bottom: 15px;">';
+        echo '<h4 style="margin: 0 0 10px 0; font-size: 14px; color: #1d2327;">Quick Exclude Options:</h4>';
+        echo '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
+        
+        $exclude_options = array(
+            'checkout' => 'Checkout Pages',
+            'cart' => 'Cart Pages',
+            'my_account' => 'My Account Pages',
+            'admin' => 'Admin Pages',
+            'login' => 'Login/Register Pages'
+        );
+        
+        foreach ($exclude_options as $value => $label) {
+            $checked = (strpos($exclude_urls, $value) !== false) ? 'checked' : '';
+            echo '<label style="display: flex; align-items: center; gap: 5px; font-size: 13px;">';
+            echo '<input type="checkbox" class="ca-banner-quick-exclude" data-value="' . esc_attr($value) . '" ' . $checked . '>';
+            echo $label;
+            echo '</label>';
+        }
+        
+        echo '</div>';
+        echo '</div>';
+        
+        // Advanced textarea for custom exclude URLs
+        echo '<div class="ca-banner-advanced-urls">';
+        echo '<h4 style="margin: 0 0 10px 0; font-size: 14px; color: #1d2327;">Custom Exclude URLs:</h4>';
         echo '<textarea name="' . self::OPTION_NAME . '[exclude_urls]" id="banner_exclude_urls" class="ca-banner-textarea" rows="4" placeholder="/checkout/&#10;/cart/&#10;/admin/">' . esc_textarea($exclude_urls) . '</textarea>';
-        echo '<p class="description"><strong>Exclude Pages:</strong> Enter one URL per line to exclude the banner from specific pages. Use relative URLs like <code>/checkout/</code> or <code>/cart/</code>. Works with both sitewide and specific page modes.</p>';
+        echo '<p class="description"><strong>Exclude Pages:</strong> Enter one URL per line to exclude the banner from specific pages. Use relative URLs like <code>/checkout/</code> or <code>/cart/</code>. You can also use the quick options above.</p>';
+        echo '</div>';
+        
         echo '</div>';
     }
     

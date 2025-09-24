@@ -5,6 +5,64 @@
 jQuery(document).ready(function($) {
     'use strict';
     
+    // Quick options functionality
+    function updateQuickOptions() {
+        // Handle include quick options
+        const includeOptions = document.querySelectorAll('.ca-banner-quick-option');
+        const includeTextarea = document.getElementById('banner_urls');
+        
+        includeOptions.forEach(function(option) {
+            option.addEventListener('change', function() {
+                updateTextareaFromQuickOptions(includeTextarea, includeOptions, 'include');
+            });
+        });
+        
+        // Handle exclude quick options
+        const excludeOptions = document.querySelectorAll('.ca-banner-quick-exclude');
+        const excludeTextarea = document.getElementById('banner_exclude_urls');
+        
+        excludeOptions.forEach(function(option) {
+            option.addEventListener('change', function() {
+                updateTextareaFromQuickOptions(excludeTextarea, excludeOptions, 'exclude');
+            });
+        });
+    }
+    
+    function updateTextareaFromQuickOptions(textarea, options, type) {
+        if (!textarea) return;
+        
+        let currentUrls = textarea.value.split('\n').filter(url => url.trim() !== '');
+        let quickValues = [];
+        
+        // Get selected quick options
+        options.forEach(function(option) {
+            if (option.checked) {
+                quickValues.push(option.getAttribute('data-value'));
+            }
+        });
+        
+        // Remove existing quick option values
+        currentUrls = currentUrls.filter(url => {
+            return !options.some(option => url.trim() === option.getAttribute('data-value'));
+        });
+        
+        // Add new quick option values
+        quickValues.forEach(function(value) {
+            if (!currentUrls.includes(value)) {
+                currentUrls.push(value);
+            }
+        });
+        
+        // Update textarea
+        textarea.value = currentUrls.join('\n');
+        
+        // Trigger change event for preview
+        textarea.dispatchEvent(new Event('change'));
+    }
+    
+    // Initialize quick options
+    updateQuickOptions();
+    
     // Conditional field logic
     function updateConditionalFields() {
         const sitewideToggle = document.getElementById('banner_sitewide');
