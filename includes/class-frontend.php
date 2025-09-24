@@ -134,7 +134,7 @@ class CA_Banners_Frontend {
             echo ' -->';
         }
         
-        $this->render_banner_script($message, $repeat, $background_color, $text_color, $font_size, $font_family, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date);
+        $this->render_banner_script($message, $repeat, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date);
     }
     
     /**
@@ -167,6 +167,7 @@ class CA_Banners_Frontend {
         $text_color = isset($settings['text_color']) ? $settings['text_color'] : '#000000';
         $font_size = isset($settings['font_size']) ? intval($settings['font_size']) : 16;
         $font_family = isset($settings['font_family']) ? $settings['font_family'] : 'Arial';
+        $font_weight = isset($settings['font_weight']) ? $settings['font_weight'] : '600';
         $border_width = isset($settings['border_width']) ? intval($settings['border_width']) : 0;
         $border_style = isset($settings['border_style']) ? $settings['border_style'] : 'solid';
         $border_color = isset($settings['border_color']) ? $settings['border_color'] : '#000000';
@@ -185,6 +186,7 @@ class CA_Banners_Frontend {
         echo 'textColor: "' . esc_js($text_color) . '",';
         echo 'fontSize: ' . $font_size . ',';
         echo 'fontFamily: "' . esc_js($font_family) . '",';
+        echo 'fontWeight: "' . esc_js($font_weight) . '",';
         echo 'borderWidth: ' . $border_width . ',';
         echo 'borderStyle: "' . esc_js($border_style) . '",';
         echo 'borderColor: "' . esc_js($border_color) . '",';
@@ -226,7 +228,7 @@ class CA_Banners_Frontend {
                     'text-align: center !important',
                     'z-index: 999999 !important',
                     'overflow: hidden !important',
-                    'font-weight: 600 !important',
+                    'font-weight: ' + caBannerConfig.fontWeight + ' !important',
                     'font-size: ' + caBannerConfig.fontSize + 'px !important',
                     'font-family: "' + caBannerConfig.fontFamily + '", sans-serif !important',
                     'border-top: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
@@ -282,7 +284,7 @@ class CA_Banners_Frontend {
     /**
      * Render banner JavaScript
      */
-    private function render_banner_script($message, $repeat, $background_color, $text_color, $font_size, $font_family, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date) {
+    private function render_banner_script($message, $repeat, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date) {
         echo '<script>';
         echo 'var caBannerConfig = {';
         echo 'message: ' . json_encode($message . ' &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ') . ',';
@@ -291,6 +293,7 @@ class CA_Banners_Frontend {
         echo 'textColor: "' . esc_js($text_color) . '",';
         echo 'fontSize: ' . intval($font_size) . ',';
         echo 'fontFamily: "' . esc_js($font_family) . '",';
+        echo 'fontWeight: "' . esc_js($font_weight) . '",';
         echo 'borderWidth: ' . intval($border_width) . ',';
         echo 'borderStyle: "' . esc_js($border_style) . '",';
         echo 'borderColor: "' . esc_js($border_color) . '",';
@@ -379,7 +382,7 @@ class CA_Banners_Frontend {
                         'text-align: center !important',
                         'z-index: 999999 !important',
                         'overflow: hidden !important',
-                        'font-weight: 600 !important',
+                        'font-weight: ' + (config.fontWeight || '600') + ' !important',
                         'font-size: ' + (config.fontSize || 16) + 'px !important',
                         'font-family: "' + (config.fontFamily || 'Arial') + '", sans-serif !important',
                         'border-top: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',

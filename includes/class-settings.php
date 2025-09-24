@@ -85,12 +85,13 @@ class CA_Banners_Settings {
         add_settings_field('banner_exclude_urls', 'Exclude on Pages', array($this, 'exclude_urls_callback'), 'banner-plugin', 'banner_display_section');
         add_settings_field('banner_disable_mobile', 'Disable on Mobile', array($this, 'disable_mobile_callback'), 'banner-plugin', 'banner_display_section');
 
-        // Styling Settings Section
-        add_settings_section('banner_styling_section', 'Styling Settings', array($this, 'styling_section_callback'), 'banner-plugin');
+        // Style Settings Section (renamed from Styling)
+        add_settings_section('banner_styling_section', 'Style Settings', array($this, 'styling_section_callback'), 'banner-plugin');
         add_settings_field('banner_background_color', 'Background Color', array($this, 'background_color_callback'), 'banner-plugin', 'banner_styling_section');
         add_settings_field('banner_text_color', 'Text Color', array($this, 'text_color_callback'), 'banner-plugin', 'banner_styling_section');
         add_settings_field('banner_font_size', 'Font Size', array($this, 'font_size_callback'), 'banner-plugin', 'banner_styling_section');
         add_settings_field('banner_font_family', 'Font Family', array($this, 'font_family_callback'), 'banner-plugin', 'banner_styling_section');
+        add_settings_field('banner_font_weight', 'Font Weight', array($this, 'font_weight_callback'), 'banner-plugin', 'banner_styling_section');
         add_settings_field('banner_border_width', 'Border Width', array($this, 'border_width_callback'), 'banner-plugin', 'banner_styling_section');
         add_settings_field('banner_border_style', 'Border Style', array($this, 'border_style_callback'), 'banner-plugin', 'banner_styling_section');
         add_settings_field('banner_border_color', 'Border Color', array($this, 'border_color_callback'), 'banner-plugin', 'banner_styling_section');
@@ -301,6 +302,30 @@ class CA_Banners_Settings {
         }
         echo '</select>';
         echo '<p class="description">Choose the font family for your banner text.</p>';
+        echo '</div>';
+    }
+    
+    public function font_weight_callback() {
+        $settings = $this->get_settings();
+        $font_weight = $settings['font_weight'];
+        $weight_options = array(
+            '300' => 'Light (300)',
+            '400' => 'Normal (400)',
+            '500' => 'Medium (500)',
+            '600' => 'Semi Bold (600)',
+            '700' => 'Bold (700)',
+            '800' => 'Extra Bold (800)',
+            '900' => 'Black (900)'
+        );
+
+        echo '<div class="ca-banner-form-group">';
+        echo '<select name="' . self::OPTION_NAME . '[font_weight]" id="banner_font_weight" class="ca-banner-select">';
+        foreach ($weight_options as $value => $label) {
+            $selected = ($font_weight === $value) ? 'selected' : '';
+            echo '<option value="' . esc_attr($value) . '" ' . $selected . '>' . $label . '</option>';
+        }
+        echo '</select>';
+        echo '<p class="description">Choose the font weight for your banner text. This affects how bold the text appears.</p>';
         echo '</div>';
     }
     
