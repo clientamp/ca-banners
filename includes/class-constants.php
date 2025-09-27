@@ -26,7 +26,7 @@ class CA_Banners_Constants {
     /**
      * Plugin version
      */
-    const PLUGIN_VERSION = '1.1.0';
+    const PLUGIN_VERSION = '1.1.1';
     
     /**
      * Plugin text domain

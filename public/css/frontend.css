@@ -16,7 +16,7 @@ body.ca-banner-active {
     left: 0;
     width: 100%;
     z-index: 99990;
-    margin: 0 0 15px 0;
+    margin: 0;
     padding: 10px;
     border: none;
     box-shadow: none;
@@ -34,6 +34,11 @@ body.ca-banner-active {
     min-height: 40px;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+}
+
+/* Add spacing only when admin bar is present */
+.admin-bar .ca-banner-container {
+    margin: 0 0 15px 0;
 }
 
 /* Ultra high specificity to override any theme styles */

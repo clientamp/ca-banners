@@ -565,7 +565,7 @@ class CA_Banners_Frontend {
                     'min-height: 40px !important',
                     'border-top: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
                     'border-bottom: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
-                    'margin: 0 0 15px 0 !important',
+                    'margin: 0 !important',
                     'box-shadow: none !important'
                 ].join('; ');
                 
@@ -931,7 +931,7 @@ class CA_Banners_Frontend {
                         'min-height: 40px !important',
                         'border-top: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',
                         'border-bottom: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',
-                        'margin: 0 0 15px 0 !important',
+                        'margin: 0 !important',
                         'box-shadow: none !important'
                     ].join('; ');
 
@@ -984,7 +984,7 @@ class CA_Banners_Frontend {
                         'min-height: 40px !important',
                         'border-top: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',
                         'border-bottom: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',
-                        'margin: 0 0 15px 0 !important',
+                        'margin: 0 !important',
                         'box-shadow: none !important',
                         'display: flex !important'
                     ].join('; ');
@@ -1007,6 +1007,11 @@ class CA_Banners_Frontend {
 
                     // Insert banner
                     document.body.insertBefore(banner, document.body.firstChild);
+
+                    // Add admin bar spacing if present
+                    if (document.documentElement.classList.contains('admin-bar')) {
+                        banner.style.marginBottom = '15px';
+                    }
 
                     // Add link color style
                     banner.style.setProperty('--link-color', config.linkColor, 'important');
