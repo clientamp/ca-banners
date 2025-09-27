@@ -47,7 +47,7 @@ class CA_Banners_Settings {
      * @since 1.2.7
      */
     public function register_settings() {
-        register_setting(CA_Banners_Constants::OPTION_NAME, self::OPTION_NAME, array(
+        register_setting(CA_Banners_Constants::ADMIN_PAGE_SLUG, self::OPTION_NAME, array(
             'sanitize_callback' => array($this, 'sanitize_settings')
         ));
 
@@ -92,6 +92,8 @@ class CA_Banners_Settings {
         add_settings_field('banner_button_padding', 'Button Padding', array($this, 'button_padding_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
         add_settings_field('banner_button_font_size', 'Button Font Size', array($this, 'button_font_size_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
         add_settings_field('banner_button_font_weight', 'Button Font Weight', array($this, 'button_font_weight_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_margin_left', 'Button Left Margin', array($this, 'button_margin_left_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
+        add_settings_field('banner_button_margin_right', 'Button Right Margin', array($this, 'button_margin_right_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
         add_settings_field('banner_button_lock', 'Button Lock', array($this, 'button_lock_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
         // add_settings_field('banner_button_gap', 'Button Gap from Edge', array($this, 'button_gap_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
         // add_settings_field('banner_button_new_window', 'Open in New Window', array($this, 'button_new_window_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_button_section');
@@ -185,12 +187,6 @@ class CA_Banners_Settings {
      */
     public function sanitize_settings($input) {
         try {
-            // Verify nonce for CSRF protection
-            if (!isset($_POST['ca_banners_nonce']) || !wp_verify_nonce($_POST['ca_banners_nonce'], 'ca_banners_settings')) {
-                $this->log_error('Security check failed for settings sanitization', null, CA_Banners_Error_Handler::TYPE_SECURITY, CA_Banners_Error_Handler::SEVERITY_HIGH);
-                wp_die(__('Security check failed. Please try again.', 'ca-banners'));
-            }
-            
             // Check user capabilities
             if (!current_user_can('edit_ca_banners')) {
                 $this->log_error('Unauthorized settings access attempt', null, CA_Banners_Error_Handler::TYPE_PERMISSION, CA_Banners_Error_Handler::SEVERITY_HIGH);
@@ -198,7 +194,14 @@ class CA_Banners_Settings {
             }
             
             $ca_banners = CA_Banners::get_instance();
-            return $ca_banners->validator->sanitize_settings($input);
+            $sanitized_input = $ca_banners->validator->sanitize_settings($input);
+            
+            // Invalidate caches after successful sanitization
+            // This ensures cache is cleared when WordPress Settings API saves the settings
+            $ca_banners->invalidate_settings_cache();
+            $ca_banners->invalidate_banner_cache();
+            
+            return $sanitized_input;
             
         } catch (Exception $e) {
             $this->log_error('Failed to sanitize settings', $e);
@@ -850,12 +853,35 @@ class CA_Banners_Settings {
         echo '<p class="description">Choose the font weight for your button text.</p>';
         echo '</div>';
     }
+    
+    public function button_margin_left_callback() {
+        $settings = $this->get_settings();
+        $button_margin_left = $settings['button_margin_left'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[button_margin_left]" id="banner_button_margin_left" class="ca-banner-range" value="' . esc_attr($button_margin_left) . '" min="0" max="200" oninput="document.getElementById(\'button-margin-left-value\').textContent = this.value + \'px\'">';
+        echo '<span class="ca-banner-range-value" id="button-margin-left-value">' . esc_attr($button_margin_left) . 'px</span>';
+        echo '</div>';
+        echo '<p class="description">Set the left margin for your button (0-200px).</p>';
+        echo '</div>';
+    }
+    
+    public function button_margin_right_callback() {
+        $settings = $this->get_settings();
+        $button_margin_right = $settings['button_margin_right'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[button_margin_right]" id="banner_button_margin_right" class="ca-banner-range" value="' . esc_attr($button_margin_right) . '" min="0" max="200" oninput="document.getElementById(\'button-margin-right-value\').textContent = this.value + \'px\'">';
+        echo '<span class="ca-banner-range-value" id="button-margin-right-value">' . esc_attr($button_margin_right) . 'px</span>';
+        echo '</div>';
+        echo '<p class="description">Set the right margin for your button (0-200px).</p>';
+        echo '</div>';
+    }
 
     public function button_lock_callback() {
         $settings = $this->get_settings();
         $button_lock_enabled = isset($settings['button_lock_enabled']) ? $settings['button_lock_enabled'] : false;
         $button_lock_position = isset($settings['button_lock_position']) ? $settings['button_lock_position'] : 'left';
-        $button_gap = isset($settings['button_gap']) ? $settings['button_gap'] : 15;
         
         echo '<div class="ca-banner-form-group">';
         echo '<div style="margin-bottom: 10px;">';
@@ -868,12 +894,7 @@ class CA_Banners_Settings {
         echo '<option value="right"' . selected('right', $button_lock_position, false) . '>Right</option>';
         echo '</select>';
         echo '</div>';
-        echo '<label for="banner_button_gap" style="display: block; margin-bottom: 5px;">Gap from Edge</label>';
-        echo '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">';
-        echo '<input type="range" name="' . self::OPTION_NAME . '[button_gap]" id="banner_button_gap" class="ca-banner-range" value="' . esc_attr($button_gap) . '" min="0" max="50" oninput="document.getElementById(\'button-gap-value\').textContent = this.value + \'px\'">';
-        echo '<span class="ca-banner-range-value" id="button-gap-value">' . esc_attr($button_gap) . 'px</span>';
-        echo '</div>';
-        echo '<p class="description">When enabled, the button will be fixed on the selected side with the specified gap from edge, and appear only once.</p>';
+        echo '<p class="description">When enabled, the button will be fixed on the selected side and appear only once.</p>';
         echo '</div>';
     }
 }

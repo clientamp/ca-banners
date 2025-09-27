@@ -129,8 +129,7 @@ class CA_Banners_Admin {
             <h1>Scrolling Banners Settings</h1>
             
             <form method="post" action="options.php" id="ca-banner-settings-form">
-                <?php settings_fields(CA_Banners_Constants::OPTION_NAME); ?>
-                <?php wp_nonce_field(CA_Banners_Constants::NONCE_SETTINGS_ACTION, 'ca_banners_nonce'); ?>
+                <?php settings_fields(CA_Banners_Constants::ADMIN_PAGE_SLUG); ?>
                 
                 <!-- Live Preview -->
                 <div class="ca-banner-preview">
@@ -379,7 +378,11 @@ class CA_Banners_Admin {
         
         wp_enqueue_media();
         wp_enqueue_style('ca-banners-admin', CA_BANNERS_PLUGIN_URL . 'admin/css/admin.css', array(), CA_BANNERS_VERSION);
-        wp_enqueue_script('ca-banners-admin', CA_BANNERS_PLUGIN_URL . 'admin/js/admin.js', array('jquery'), CA_BANNERS_VERSION, true);
+        // Load frontend CSS for live preview to match exactly - this MUST come after admin CSS
+        wp_enqueue_style('ca-banners-frontend-preview', CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/' . CA_Banners_Constants::DIR_CSS . '/' . CA_Banners_Constants::CSS_FILE_EXTENSION, array('ca-banners-admin'), CA_BANNERS_VERSION . '-' . time() . '-preview');
+        // Load shared JavaScript for banner creation
+        wp_enqueue_script('ca-banners-shared', CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/js/ca-banners-shared.js', array(), CA_BANNERS_VERSION, true);
+        wp_enqueue_script('ca-banners-admin', CA_BANNERS_PLUGIN_URL . 'admin/js/admin.js', array('jquery', 'ca-banners-shared'), CA_BANNERS_VERSION, true);
         
         // Localize script with cache management nonce
         wp_localize_script('ca-banners-admin', 'ca_banners_admin', array(

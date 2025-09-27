@@ -26,7 +26,7 @@ class CA_Banners_Constants {
     /**
      * Plugin version
      */
-    const PLUGIN_VERSION = '1.0.0';
+    const PLUGIN_VERSION = '1.1.0';
     
     /**
      * Plugin text domain
@@ -85,6 +85,8 @@ class CA_Banners_Constants {
     const DEFAULT_BUTTON_PADDING = 8;
     const DEFAULT_BUTTON_FONT_SIZE = 14;
     const DEFAULT_BUTTON_FONT_WEIGHT = '600';
+    const DEFAULT_BUTTON_MARGIN_LEFT = 20;
+    const DEFAULT_BUTTON_MARGIN_RIGHT = 20;
     
     // =============================================================================
     // VALIDATION LIMITS AND CONSTRAINTS
@@ -120,6 +122,8 @@ class CA_Banners_Constants {
     const MAX_BUTTON_PADDING = 50;
     const MIN_BUTTON_FONT_SIZE = 8;
     const MAX_BUTTON_FONT_SIZE = 24;
+    const MIN_BUTTON_MARGIN = 0;
+    const MAX_BUTTON_MARGIN = 200;
     
     /**
      * Date validation ranges
@@ -480,7 +484,9 @@ class CA_Banners_Constants {
             'button_border_radius' => self::DEFAULT_BUTTON_BORDER_RADIUS,
             'button_padding' => self::DEFAULT_BUTTON_PADDING,
             'button_font_size' => self::DEFAULT_BUTTON_FONT_SIZE,
-            'button_font_weight' => self::DEFAULT_BUTTON_FONT_WEIGHT
+            'button_font_weight' => self::DEFAULT_BUTTON_FONT_WEIGHT,
+            'button_margin_left' => self::DEFAULT_BUTTON_MARGIN_LEFT,
+            'button_margin_right' => self::DEFAULT_BUTTON_MARGIN_RIGHT
         );
     }
     

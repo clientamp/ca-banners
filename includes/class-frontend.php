@@ -45,6 +45,8 @@ class CA_Banners_Frontend {
     public function enqueue_scripts() {
         // Always enqueue CSS to ensure it's available with cache busting
         wp_enqueue_style('ca-banners-frontend', CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/' . CA_Banners_Constants::DIR_CSS . '/' . CA_Banners_Constants::CSS_FILE_EXTENSION, array(), CA_BANNERS_VERSION . '-' . time() . '-fix-duplicate');
+        // Load shared JavaScript for banner creation
+        wp_enqueue_script('ca-banners-shared', CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/js/ca-banners-shared.js', array(), CA_BANNERS_VERSION, true);
     }
     
     /**
@@ -137,6 +139,8 @@ class CA_Banners_Frontend {
         $button_gap = $validated_settings['button_gap'];
         $vertical_padding = $validated_settings['vertical_padding'];
         $button_new_window = $validated_settings['button_new_window'];
+        $button_margin_left = $validated_settings['button_margin_left'] ?? 10;
+        $button_margin_right = $validated_settings['button_margin_right'] ?? 10;
         $link_color = $validated_settings['link_color'] ?? '#0000ff';
 
         // Check scheduling
@@ -193,7 +197,7 @@ class CA_Banners_Frontend {
             } else {
                 // Cache miss - generate and cache HTML
                 ob_start();
-                $this->render_banner_script($message, $repeat, $speed, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date, $button_enabled, $button_text, $button_link, $button_color, $button_text_color, $button_border_width, $button_border_color, $button_border_radius, $button_padding, $button_font_size, $button_font_weight, $sticky, $button_lock_enabled, $button_lock_position, $button_gap, $vertical_padding, $button_new_window, $link_color);
+                $this->render_banner_script($message, $repeat, $speed, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date, $button_enabled, $button_text, $button_link, $button_color, $button_text_color, $button_border_width, $button_border_color, $button_border_radius, $button_padding, $button_font_size, $button_font_weight, $sticky, $button_lock_enabled, $button_lock_position, $vertical_padding, $button_new_window, $link_color, $button_margin_left, $button_margin_right);
                 $banner_html = ob_get_clean();
                 
                 // Cache the generated HTML
@@ -283,6 +287,8 @@ class CA_Banners_Frontend {
             'vertical_padding' => $settings['vertical_padding'] ?? 10,
             'button_new_window' => $settings['button_new_window'] ?? false,
             'link_color' => $settings['link_color'] ?? '#0000ff',
+            'button_margin_left' => $settings['button_margin_left'] ?? 10,
+            'button_margin_right' => $settings['button_margin_right'] ?? 10,
             'image' => $settings['image'] ?? '',
             'image_start_date' => $settings['image_start_date'] ?? '',
             'image_end_date' => $settings['image_end_date'] ?? '',
@@ -506,8 +512,8 @@ class CA_Banners_Frontend {
                             'font-size: ' + (caBannerConfig.buttonFontSize || 14) + 'px !important',
                             'font-weight: ' + (caBannerConfig.buttonFontWeight || '600') + ' !important',
                             'text-decoration: none !important',
-                            'margin-left: 10px !important',
-                            'margin-right: 30px !important',
+                            'margin-left: ' + (caBannerConfig.buttonMarginLeft || 10) + 'px !important',
+                            'margin-right: ' + (caBannerConfig.buttonMarginRight || 10) + 'px !important',
                             'white-space: nowrap !important',
                             'vertical-align: middle !important'
                         ].join('; ');
@@ -552,14 +558,14 @@ class CA_Banners_Frontend {
                     'font-weight: ' + caBannerConfig.fontWeight + ' !important',
                     'font-size: ' + caBannerConfig.fontSize + 'px !important',
                     'font-family: "' + caBannerConfig.fontFamily + '", sans-serif !important',
-                    'border-radius: 4px !important',
+                    'border-radius: 0px !important',
                         'white-space: nowrap !important',
                         'display: block !important',
                         'overflow: hidden !important',
                     'min-height: 40px !important',
                     'border-top: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
                     'border-bottom: ' + caBannerConfig.borderWidth + 'px ' + caBannerConfig.borderStyle + ' ' + caBannerConfig.borderColor + ' !important',
-                    'margin: 0 !important',
+                    'margin: 0 0 15px 0 !important',
                     'box-shadow: none !important'
                 ].join('; ');
                 
@@ -659,11 +665,13 @@ class CA_Banners_Frontend {
      * @param int $vertical_padding Vertical padding for banner height
      * @param bool $button_new_window Open link in new window
      * @param string $link_color Link color for banner
+     * @param int $button_margin_left Left margin for fixed buttons
+     * @param int $button_margin_right Right margin for fixed buttons
      */
-    private function render_banner_script($message, $repeat, $speed, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date, $button_enabled, $button_text, $button_link, $button_color, $button_text_color, $button_border_width, $button_border_color, $button_border_radius, $button_padding, $button_font_size, $button_font_weight, $sticky, $button_lock_enabled, $button_lock_position, $button_gap, $vertical_padding, $button_new_window, $link_color) {
+    private function render_banner_script($message, $repeat, $speed, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date, $button_enabled, $button_text, $button_link, $button_color, $button_text_color, $button_border_width, $button_border_color, $button_border_radius, $button_padding, $button_font_size, $button_font_weight, $sticky, $button_lock_enabled, $button_lock_position, $vertical_padding, $button_new_window, $link_color, $button_margin_left, $button_margin_right) {
         echo '<script>';
         echo 'var caBannerConfig = {';
-        echo 'message: ' . wp_json_encode(str_replace(["\r\n", "\r", "\n"], ' ', $message) . ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ') . ',';
+        echo 'message: ' . wp_json_encode(trim(str_replace(["\r\n", "\r", "\n"], ' ', $message))) . ',';
         echo 'repeat: ' . intval($repeat) . ',';
         echo 'speed: ' . intval($speed ?: 60) . ',';
         echo 'backgroundColor: "' . esc_js($background_color) . '",';
@@ -697,6 +705,8 @@ class CA_Banners_Frontend {
         echo 'verticalPadding: ' . intval($vertical_padding) . ',';
         echo 'buttonNewWindow: ' . ($button_new_window ? 'true' : 'false') . ',';
         echo 'linkColor: "' . esc_js($link_color) . '",';
+        echo 'buttonMarginLeft: ' . intval($button_margin_left ?? 10) . ',';
+        echo 'buttonMarginRight: ' . intval($button_margin_right ?? 10) . ',';
         echo 'sticky: ' . ($sticky ? 'true' : 'false') . '';
         echo '};';
         ?>
@@ -815,26 +825,26 @@ class CA_Banners_Frontend {
                         button.className = "ca-banner-button";
                         button.textContent = config.buttonText;
                         var buttonStyles = [
-                            'display: inline-block !important',
-                            'background-color: ' + (config.buttonColor || '#ce7a31') + ' !important',
-                            'color: ' + (config.buttonTextColor || '#ffffff') + ' !important',
-                            'border: ' + (config.buttonBorderWidth || 0) + 'px solid ' + (config.buttonBorderColor || '#ce7a31') + ' !important',
-                            'border-radius: ' + (config.buttonBorderRadius || 4) + 'px !important',
-                            'padding: ' + (config.buttonPadding || 8) + 'px !important',
-                            'font-size: ' + (config.buttonFontSize || 14) + 'px !important',
-                            'font-weight: ' + (config.buttonFontWeight || '600') + ' !important',
-                            'text-decoration: none !important',
-                            'white-space: nowrap !important',
-                            'vertical-align: middle !important',
-                            'position: relative !important',
-                            'z-index: 2 !important'
+                            'display: inline-block',
+                            'background-color: ' + (config.buttonColor || '#ce7a31'),
+                            'color: ' + (config.buttonTextColor || '#ffffff'),
+                            'border: ' + (config.buttonBorderWidth || 0) + 'px solid ' + (config.buttonBorderColor || '#ce7a31'),
+                            'border-radius: ' + (config.buttonBorderRadius || 4) + 'px',
+                            'padding: ' + (config.buttonPadding || 8) + 'px',
+                            'font-size: ' + (config.buttonFontSize || 14) + 'px',
+                            'font-weight: ' + (config.buttonFontWeight || '600'),
+                            'text-decoration: none',
+                            'white-space: nowrap',
+                            'vertical-align: middle',
+                            'position: relative',
+                            'z-index: 2'
                         ];
                         if (config.buttonLockPosition === 'right') {
-                            buttonStyles.push('margin-right: ' + (config.buttonGap || 15) + 'px !important');
-                            buttonStyles.push('margin-left: 10px !important');
-                        } else if (config.buttonLockPosition === 'left') {
-                            buttonStyles.push('margin-left: ' + (config.buttonGap || 15) + 'px !important');
-                            buttonStyles.push('margin-right: 10px !important');
+                            buttonStyles.push('margin-left: ' + config.buttonMarginLeft + 'px');
+                            buttonStyles.push('margin-right: ' + config.buttonMarginRight + 'px');
+                        } else {
+                            buttonStyles.push('margin-left: ' + config.buttonMarginLeft + 'px');
+                            buttonStyles.push('margin-right: ' + config.buttonMarginRight + 'px');
                         }
                         button.style.cssText = buttonStyles.join('; ');
                         buttonAppended = true;
@@ -842,6 +852,7 @@ class CA_Banners_Frontend {
                     for (var i = 0; i < repeat; i++) {
                         var msgSpan = document.createElement("span");
                         msgSpan.innerHTML = caBanner.sanitizeHtml(cleanMessage);
+                        msgSpan.style.display = 'inline-block';
                         messageContainer.appendChild(msgSpan);
 
                         if (!isFixed && config.buttonEnabled && config.buttonText && config.buttonLink) {
@@ -862,23 +873,28 @@ class CA_Banners_Frontend {
                                 'font-size: ' + (config.buttonFontSize || 14) + 'px !important',
                                 'font-weight: ' + (config.buttonFontWeight || '600') + ' !important',
                                 'text-decoration: none !important',
-                                'margin-left: 10px !important',
-                                'margin-right: 20px !important',
+                                'margin-left: ' + config.buttonMarginLeft + 'px !important',
+                                'margin-right: ' + config.buttonMarginRight + 'px !important',
                                 'white-space: nowrap !important',
                                 'vertical-align: middle !important'
                             ].join('; ');
                             messageContainer.appendChild(button);
+                        } else {
+                            // Add gap using sum of margins
+                            var gap = parseInt(config.buttonMarginLeft || 10) + parseInt(config.buttonMarginRight || 10);
+                            msgSpan.style.marginRight = gap + 'px';
                         }
                     }
                     
                     // Apply CSS animation for scrolling effect - Match admin preview exactly
                     var speed = config.speed || 60;
-                    messageContainer.style.animationDuration = speed + 's';
+                    messageContainer.style.animation = 'ca-banner-preview-scroll ' + speed + 's linear infinite';
                     messageContainer.style.display = 'inline-block';
                     messageContainer.style.whiteSpace = 'nowrap';
                     messageContainer.style.paddingRight = '20px';
                     messageContainer.style.willChange = 'transform';
                     messageContainer.style.minWidth = '200px';
+                    messageContainer.style.zIndex = '1 !important';
                     
                     bannerContent.appendChild(messageContainer);
                     if (buttonAppended) {
@@ -908,14 +924,14 @@ class CA_Banners_Frontend {
                         'font-weight: ' + (config.fontWeight || '600') + ' !important',
                         'font-size: ' + (config.fontSize || 16) + 'px !important',
                         'font-family: "' + (config.fontFamily || 'Arial') + '", sans-serif !important',
-                        'border-radius: 4px !important',
+                        'border-radius: 0px !important',
                         'white-space: nowrap !important',
                         'display: flex !important',
                         'align-items: center !important',
                         'min-height: 40px !important',
                         'border-top: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',
                         'border-bottom: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',
-                        'margin: 0 !important',
+                        'margin: 0 0 15px 0 !important',
                         'box-shadow: none !important'
                     ].join('; ');
 
@@ -957,18 +973,18 @@ class CA_Banners_Frontend {
                         'color: ' + (config.textColor || '#000000') + ' !important',
                         'padding: ' + (config.verticalPadding || 10) + 'px 10px !important',
                         'text-align: center !important',
-                        'z-index: 999999 !important',
+                        'z-index: 99990 !important',
                         'overflow: hidden !important',
                         'font-weight: ' + (config.fontWeight || '600') + ' !important',
                         'font-size: ' + (config.fontSize || 16) + 'px !important',
                         'font-family: "' + (config.fontFamily || 'Arial') + '", sans-serif !important',
-                        'border-radius: 4px !important',
+                        'border-radius: 0px !important',
                         'white-space: nowrap !important',
                         'align-items: center !important',
                         'min-height: 40px !important',
                         'border-top: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',
                         'border-bottom: ' + (config.borderWidth || 0) + 'px ' + (config.borderStyle || 'solid') + ' ' + (config.borderColor || '#000000') + ' !important',
-                        'margin: 0 !important',
+                        'margin: 0 0 15px 0 !important',
                         'box-shadow: none !important',
                         'display: flex !important'
                     ].join('; ');

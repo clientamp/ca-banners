@@ -3,7 +3,7 @@
 Plugin Name: Scrolling Banners
 Plugin URI: https://github.com/clientamp/ca-banners
 Description: Professional WordPress banner plugin with customizable scrolling messages, advanced scheduling, page targeting, and image support. Perfect for promotions, announcements, and site-wide notices.
-Version: 1.0.0
+Version: 1.1.0
 Author: clientamp
 Author URI: https://clientamp.com/
 Requires at least: 4.0

@@ -153,211 +153,88 @@ if (!document.querySelector('#ca-banner-animation-style')) {
     document.head.appendChild(style);
 }
 
-// Live Preview Functionality
+// Live Preview Functionality - Use exact same logic as frontend
 function updatePreview() {
     console.log('updatePreview called');
     try {
-    let message = 'Your banner message will appear here...';
-    if (typeof tinymce !== 'undefined' && tinymce.get('banner_message')) {
-        message = tinymce.get('banner_message').getContent() || '';
-    } else {
-        const messageField = document.getElementById('banner_message');
-        message = messageField?.value || '';
-    }
-    
-    const sanitizedMessage = sanitizeHtmlForPreview(message);
-    
-    const backgroundColor = document.getElementById('banner_background_color')?.value || '#729946';
-    const textColor = document.getElementById('banner_text_color')?.value || '#000000';
-    const fontSize = document.getElementById('banner_font_size')?.value || '16';
-    const fontFamily = document.getElementById('banner_font_family')?.value || 'Arial';
-    const fontWeight = document.getElementById('banner_font_weight')?.value || '600';
-    const repeat = document.getElementById('banner_repeat')?.value || '10';
-    const speed = document.getElementById('banner_speed')?.value || '60';
+        let message = 'Your banner message will appear here...';
+        if (typeof tinymce !== 'undefined' && tinymce.get('banner_message')) {
+            message = tinymce.get('banner_message').getContent() || '';
+        } else {
+            const messageField = document.getElementById('banner_message');
+            message = messageField?.value || '';
+        }
+        
+        const sanitizedMessage = sanitizeHtmlForPreview(message);
+        
+        const backgroundColor = document.getElementById('banner_background_color')?.value || '#729946';
+        const textColor = document.getElementById('banner_text_color')?.value || '#000000';
+        const fontSize = document.getElementById('banner_font_size')?.value || '16';
+        const fontFamily = document.getElementById('banner_font_family')?.value || 'Arial';
+        const fontWeight = document.getElementById('banner_font_weight')?.value || '600';
+        const repeat = document.getElementById('banner_repeat')?.value || '10';
+        const speed = document.getElementById('banner_speed')?.value || '60';
         const borderWidth = document.getElementById('banner_border_width')?.value || '0';
         const borderStyle = document.getElementById('banner_border_style')?.value || 'solid';
         const borderColor = document.getElementById('banner_border_color')?.value || '#000000';
         const verticalPadding = document.querySelector('input[name="banner_plugin_settings[vertical_padding]"]')?.value || '10';
         const linkColor = document.getElementById('banner_link_color')?.value || '#0000ff';
     
-    // Button settings
-    const buttonEnabled = document.querySelector('input[name="banner_plugin_settings[button_enabled]"]')?.checked || false;
-    const buttonText = document.querySelector('input[name="banner_plugin_settings[button_text]"]')?.value || '';
-    const buttonLink = document.querySelector('input[name="banner_plugin_settings[button_link]"]')?.value || '';
-    const buttonColor = document.querySelector('input[name="banner_plugin_settings[button_color]"]')?.value || '#ce7a31';
-    const buttonTextColor = document.querySelector('input[name="banner_plugin_settings[button_text_color]"]')?.value || '#ffffff';
-    const buttonBorderWidth = document.querySelector('input[name="banner_plugin_settings[button_border_width]"]')?.value || '0';
-    const buttonBorderColor = document.querySelector('input[name="banner_plugin_settings[button_border_color]"]')?.value || '#ce7a31';
-    const buttonBorderRadius = document.querySelector('input[name="banner_plugin_settings[button_border_radius]"]')?.value || '4';
-    const buttonPadding = document.querySelector('input[name="banner_plugin_settings[button_padding]"]')?.value || '8';
-    const buttonFontSize = document.querySelector('input[name="banner_plugin_settings[button_font_size]"]')?.value || '14';
-    const buttonFontWeight = document.querySelector('select[name="banner_plugin_settings[button_font_weight]"]')?.value || '600';
+        // Button settings
+        const buttonEnabled = document.querySelector('input[name="banner_plugin_settings[button_enabled]"]')?.checked || false;
+        const buttonText = document.querySelector('input[name="banner_plugin_settings[button_text]"]')?.value || '';
+        const buttonLink = document.querySelector('input[name="banner_plugin_settings[button_link]"]')?.value || '';
+        const buttonColor = document.querySelector('input[name="banner_plugin_settings[button_color]"]')?.value || '#ce7a31';
+        const buttonTextColor = document.querySelector('input[name="banner_plugin_settings[button_text_color]"]')?.value || '#ffffff';
+        const buttonBorderWidth = document.querySelector('input[name="banner_plugin_settings[button_border_width]"]')?.value || '0';
+        const buttonBorderColor = document.querySelector('input[name="banner_plugin_settings[button_border_color]"]')?.value || '#ce7a31';
+        const buttonBorderRadius = document.querySelector('input[name="banner_plugin_settings[button_border_radius]"]')?.value || '4';
+        const buttonPadding = document.querySelector('input[name="banner_plugin_settings[button_padding]"]')?.value || '8';
+        const buttonFontSize = document.querySelector('input[name="banner_plugin_settings[button_font_size]"]')?.value || '14';
+        const buttonFontWeight = document.querySelector('select[name="banner_plugin_settings[button_font_weight]"]')?.value || '600';
         const buttonLockEnabled = document.querySelector('input[name="banner_plugin_settings[button_lock_enabled]"]')?.checked || false;
         const buttonLockPosition = document.querySelector('select[name="banner_plugin_settings[button_lock_position]"]')?.value || 'left';
-        const buttonGap = document.querySelector('input[name="banner_plugin_settings[button_gap]"]')?.value || '15';
         const buttonNewWindow = document.querySelector('input[name="banner_plugin_settings[button_new_window]"]')?.checked || false;
+        const buttonMarginLeft = document.querySelector('input[name="banner_plugin_settings[button_margin_left]"]')?.value || '10';
+        const buttonMarginRight = document.querySelector('input[name="banner_plugin_settings[button_margin_right]"]')?.value || '10';
         
         // Clear existing content
         const previewContent = document.getElementById('ca-banner-preview-content');
         previewContent.innerHTML = '';
         
-        // Create banner structure matching frontend
-        var banner = document.createElement("div");
-        banner.className = "ca-banner-container";
-        banner.setAttribute('data-ca-banner', 'true');
+        // Create banner using EXACT same shared function as frontend
+        caBannerCreateBanner({
+            message: sanitizedMessage,
+            repeat: parseInt(repeat),
+            speed: parseInt(speed),
+            backgroundColor: backgroundColor,
+            textColor: textColor,
+            fontSize: parseInt(fontSize),
+            fontFamily: fontFamily,
+            fontWeight: fontWeight,
+            borderWidth: parseInt(borderWidth),
+            borderStyle: borderStyle,
+            borderColor: borderColor,
+            verticalPadding: parseInt(verticalPadding),
+            buttonEnabled: buttonEnabled,
+            buttonText: buttonText,
+            buttonLink: buttonLink,
+            buttonColor: buttonColor,
+            buttonTextColor: buttonTextColor,
+            buttonBorderWidth: parseInt(buttonBorderWidth),
+            buttonBorderColor: buttonBorderColor,
+            buttonBorderRadius: parseInt(buttonBorderRadius),
+            buttonPadding: parseInt(buttonPadding),
+            buttonFontSize: parseInt(buttonFontSize),
+            buttonFontWeight: buttonFontWeight,
+            buttonLockEnabled: buttonLockEnabled,
+            buttonLockPosition: buttonLockPosition,
+            buttonNewWindow: buttonNewWindow,
+            buttonMarginLeft: parseInt(buttonMarginLeft),
+            buttonMarginRight: parseInt(buttonMarginRight),
+            linkColor: linkColor
+        }, previewContent);
         
-        var bannerContent = document.createElement("div");
-        bannerContent.className = "ca-banner-content";
-        
-        var messageContainer = document.createElement("div");
-        messageContainer.className = "ca-banner-message";
-        
-        // Clean message (simplified)
-        var cleanMessage = sanitizedMessage.replace(/\s+/g, ' ').trim();
-        
-        // Handle fixed button and repeats
-        var buttonAppended = false;
-        var isFixed = buttonLockEnabled;
-        var button = null;
-        if (isFixed && buttonEnabled && buttonText && buttonLink) {
-            button = document.createElement("a");
-            button.href = buttonLink;
-            if (buttonNewWindow) {
-                button.target = '_blank';
-            }
-            button.className = "ca-banner-button";
-            button.textContent = buttonText;
-            var buttonStyles = [
-                'display: inline-block !important',
-                'background-color: ' + buttonColor + ' !important',
-                'color: ' + buttonTextColor + ' !important',
-                'border: ' + buttonBorderWidth + 'px solid ' + buttonBorderColor + ' !important',
-                'border-radius: ' + buttonBorderRadius + 'px !important',
-                'padding: ' + buttonPadding + 'px !important',
-                'font-size: ' + buttonFontSize + 'px !important',
-                'font-weight: ' + buttonFontWeight + ' !important',
-                'text-decoration: none !important',
-                'white-space: nowrap !important',
-                'vertical-align: middle !important',
-                'position: relative !important',
-                'z-index: 2 !important'
-            ];
-            if (buttonLockPosition === 'right') {
-                buttonStyles.push('margin-right: ' + buttonGap + 'px !important');
-                buttonStyles.push('margin-left: 10px !important');
-            } else if (buttonLockPosition === 'left') {
-                buttonStyles.push('margin-left: ' + buttonGap + 'px !important');
-                buttonStyles.push('margin-right: 10px !important');
-            }
-            button.style.cssText = buttonStyles.join('; ');
-            buttonAppended = true;
-        }
-        
-        // Add repeats
-        for (var i = 0; i < repeat; i++) {
-            var msgSpan = document.createElement("span");
-            msgSpan.innerHTML = cleanMessage;
-            messageContainer.appendChild(msgSpan);
-            
-            if (!isFixed && buttonEnabled && buttonText && buttonLink) {
-                var repButton = document.createElement("a");
-                repButton.href = buttonLink;
-                if (buttonNewWindow) {
-                    repButton.target = '_blank';
-                }
-                repButton.className = "ca-banner-button";
-                repButton.textContent = buttonText;
-                repButton.style.cssText = [
-                    'display: inline-block !important',
-                    'background-color: ' + buttonColor + ' !important',
-                    'color: ' + buttonTextColor + ' !important',
-                    'border: ' + buttonBorderWidth + 'px solid ' + buttonBorderColor + ' !important',
-                    'border-radius: ' + buttonBorderRadius + 'px !important',
-                    'padding: ' + buttonPadding + 'px !important',
-                    'font-size: ' + buttonFontSize + 'px !important',
-                    'font-weight: ' + buttonFontWeight + ' !important',
-                    'text-decoration: none !important',
-                    'margin-left: 10px !important',
-                    'margin-right: 20px !important',
-                    'white-space: nowrap !important',
-                    'vertical-align: middle !important',
-                    'position: relative !important',
-                    'z-index: 2 !important'
-                ].join('; ');
-                messageContainer.appendChild(repButton);
-            }
-        }
-        
-        // Message styles
-        messageContainer.style.animation = 'ca-banner-preview-scroll ' + speed + 's linear infinite';
-        messageContainer.style.display = 'inline-block';
-        messageContainer.style.whiteSpace = 'nowrap';
-        messageContainer.style.paddingRight = '20px';
-        messageContainer.style.willChange = 'transform';
-        messageContainer.style.minWidth = '200px';
-        
-        bannerContent.appendChild(messageContainer);
-        
-        if (buttonAppended) {
-            if (buttonLockPosition === 'left') {
-                bannerContent.insertBefore(button, messageContainer);
-            } else {
-                bannerContent.appendChild(button);
-            }
-            bannerContent.style.display = 'flex';
-            bannerContent.style.alignItems = 'center';
-            messageContainer.style.flex = '1 1 auto';
-            messageContainer.style.overflow = 'hidden';
-        }
-        
-        // Banner content styles
-        bannerContent.style.display = 'flex';
-        bannerContent.style.alignItems = 'center';
-        bannerContent.style.width = '100%';
-        bannerContent.style.overflow = 'hidden';
-        bannerContent.style.whiteSpace = 'nowrap';
-        bannerContent.style.margin = '0';
-        bannerContent.style.padding = '0';
-        
-        banner.appendChild(bannerContent);
-        
-        // Banner styles
-        banner.style.position = 'relative';
-        banner.style.top = '0';
-        banner.style.left = '0';
-        banner.style.width = '100%';
-        banner.style.backgroundColor = backgroundColor;
-        banner.style.color = textColor;
-        banner.style.padding = verticalPadding + 'px 10px';
-        banner.style.textAlign = 'center';
-        banner.style.zIndex = '999999';
-        banner.style.overflow = 'hidden';
-        banner.style.fontWeight = fontWeight;
-        banner.style.fontSize = fontSize + 'px';
-        banner.style.fontFamily = '"' + fontFamily + '", sans-serif';
-        banner.style.borderRadius = '4px';
-        banner.style.whiteSpace = 'nowrap';
-        banner.style.display = 'flex';
-        banner.style.alignItems = 'center';
-        banner.style.minHeight = '40px';
-        banner.style.borderTop = borderWidth + 'px ' + borderStyle + ' ' + borderColor;
-        banner.style.borderBottom = borderWidth + 'px ' + borderStyle + ' ' + borderColor;
-        banner.style.margin = '0';
-        banner.style.boxShadow = 'none';
-        banner.style.lineHeight = '1.4';
-        
-        previewContent.appendChild(banner);
-        
-        // Set link color
-        banner.style.setProperty('--link-color', linkColor, 'important');
-        let linkStyle = document.createElement('style');
-        linkStyle.textContent = '.ca-banner-container a { color: var(--link-color) !important; text-decoration: none !important; }';
-        banner.appendChild(linkStyle);
-
-        // Force flex
-        setTimeout(function() {
-            bannerContent.style.display = 'flex !important';
-        }, 50);
     } catch (error) {
         console.error('Preview update error:', error);
     }
@@ -393,9 +270,9 @@ const buttonFields = [
     'select[name="banner_plugin_settings[button_font_weight]"]',
     'input[name="banner_plugin_settings[button_lock_enabled]"]',
     'select[name="banner_plugin_settings[button_lock_position]"]',
-    'input[name="banner_plugin_settings[button_gap]"]',
-    'input[name="banner_plugin_settings[vertical_padding]"]',
-    'input[name="banner_plugin_settings[button_new_window]"]'
+    'input[name="banner_plugin_settings[button_new_window]"]',
+    'input[name="banner_plugin_settings[button_margin_left]"]',
+    'input[name="banner_plugin_settings[button_margin_right]"]'
 ];
 
 previewInputs.forEach(function(inputId) {

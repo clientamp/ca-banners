@@ -11,29 +11,29 @@ body.ca-banner-active {
 
 /* Ensure banner appears above all theme elements - Match Live Preview exactly */
 .ca-banner-container {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    z-index: 999999 !important;
-    margin: 0 !important;
-    padding: 10px !important;
-    border: none !important;
-    box-shadow: none !important;
-    background: #729946 !important;
-    color: #000 !important;
-    text-align: center !important;
-    font-weight: 600 !important;
-    font-size: 16px !important;
-    font-family: Arial, sans-serif !important;
-    border-radius: 4px !important;
-    overflow: hidden !important;
-    white-space: nowrap !important;
-    display: flex !important;
-    align-items: center !important;
-    min-height: 40px !important;
-    transform: translateZ(0) !important;
-    -webkit-transform: translateZ(0) !important;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99990;
+    margin: 0 0 15px 0;
+    padding: 10px;
+    border: none;
+    box-shadow: none;
+    background: #729946;
+    color: #000;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    border-radius: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 /* Ultra high specificity to override any theme styles */
@@ -52,13 +52,17 @@ body .ca-banner-container .ca-banner-content {
 .ca-banner-message {
     display: inline-block !important;
     white-space: nowrap !important;
-    animation: ca-banner-preview-scroll linear infinite !important;
+    animation: ca-banner-preview-scroll linear infinite;
     padding-right: 20px !important;
     will-change: transform !important;
     min-width: 200px !important;
     /* Default duration - will be overridden by JavaScript */
-    animation-duration: 60s !important;
+    animation-duration: 60s;
     z-index: 1 !important;
+}
+
+.ca-banner-container .ca-banner-message span {
+    display: inline-block;
 }
 
 @keyframes ca-banner-preview-scroll {
@@ -70,10 +74,9 @@ body .ca-banner-container .ca-banner-content {
 .ca-banner-button {
     display: inline-block !important;
     text-decoration: none !important;
-    margin-left: 20px !important;
     white-space: nowrap !important;
     vertical-align: middle !important;
-    z-index: 2 !important;
+    z-index: 10 !important;
 }
 
 /* Mobile responsive adjustments */
@@ -104,14 +107,13 @@ body.ca-banner-active .navbar {
 /* Ensure banner appears above theme elements */
 .ca-banner-container * {
     position: relative !important;
-    z-index: inherit !important;
 }
 
 /* Sticky Banner */
 .ca-banner-sticky {
     position: sticky !important;
     top: 0 !important;
-    z-index: 999999 !important;
+    z-index: 99990 !important;
 }
 
 /* Adjust for admin bar if present */

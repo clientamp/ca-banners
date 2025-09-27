@@ -366,17 +366,14 @@
     align-items: center;
     min-height: 40px;
     width: 100%;
-    line-height: 1.4em;
+    /* Removed line-height to use frontend CSS instead */
 }
 
-.ca-banner-preview-text {
-    display: inline-block;
-    white-space: nowrap;
-    animation: ca-banner-preview-scroll 60s linear infinite; /* Default animation */
-    padding-right: 20px; /* Space between repeats */
-    will-change: transform; /* Optimize animation performance */
-    min-width: 200px; /* Ensure content is wide enough to scroll */
-}
+/* Banner container styles removed - using frontend CSS instead for consistency */
+
+/* Banner content styles removed - using frontend CSS instead for consistency */
+
+/* Banner message styles removed - using frontend CSS instead for consistency */
 
 @keyframes ca-banner-preview-scroll {
     0% { transform: translateX(100%); }
@@ -641,4 +638,28 @@
     width: 20px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Enhanced responsive adjustments for live preview */
+@media (max-width: 768px) {
+    .ca-banner-preview {
+        position: relative !important;
+        top: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0 !important;
+        padding: 10px !important;
+        overflow-x: auto !important;
+        box-sizing: border-box !important;
+    }
+    
+    .ca-banner-preview .ca-banner-container {
+        min-width: 300px !important; /* Prevent shrinkage */
+        font-size: 14px !important;
+        padding: 8px !important;
+    }
+    
+    .ca-banner-preview-content {
+        min-width: 100% !important;
+    }
 }
