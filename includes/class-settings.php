@@ -57,6 +57,8 @@ class CA_Banners_Settings {
         add_settings_field('banner_message', 'Banner Message', array($this, 'message_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
         add_settings_field('banner_repeat', 'Message Repeats', array($this, 'repeat_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
         add_settings_field('banner_speed', 'Scroll Speed', array($this, 'speed_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
+        add_settings_field('banner_mobile_speed_multiplier', 'Mobile Speed Multiplier', array($this, 'mobile_speed_multiplier_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
+        add_settings_field('banner_tablet_speed_multiplier', 'Tablet Speed Multiplier', array($this, 'tablet_speed_multiplier_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
         add_settings_field('banner_sticky', 'Sticky Banner', array($this, 'sticky_callback'), CA_Banners_Constants::ADMIN_PAGE_SLUG, 'banner_basic_section');
 
         // Display Settings Section
@@ -394,6 +396,44 @@ class CA_Banners_Settings {
         echo '<span class="ca-banner-range-value" id="speed-value">' . esc_attr($speed) . 's</span>';
         echo '</div>';
         echo '<p class="description">Control how fast the banner message scrolls (10-100 seconds). Lower values = faster scrolling.</p>';
+        echo '</div>';
+    }
+    
+    /**
+     * Mobile speed multiplier field callback
+     * 
+     * Renders the mobile speed multiplier field with range slider.
+     * 
+     * @since 1.2.7
+     */
+    public function mobile_speed_multiplier_callback() {
+        $settings = $this->get_settings();
+        $multiplier = $settings['mobile_speed_multiplier'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[mobile_speed_multiplier]" id="banner_mobile_speed_multiplier" class="ca-banner-range" value="' . esc_attr($multiplier) . '" min="0.1" max="2.0" step="0.1" oninput="document.getElementById(\'mobile-speed-multiplier-value\').textContent = this.value + \'x\'">';
+        echo '<span class="ca-banner-range-value" id="mobile-speed-multiplier-value">' . esc_attr($multiplier) . 'x</span>';
+        echo '</div>';
+        echo '<p class="description">Speed multiplier for mobile devices (≤768px). 0.5x = half the base speed (faster), 2.0x = double the base speed (slower).</p>';
+        echo '</div>';
+    }
+    
+    /**
+     * Tablet speed multiplier field callback
+     * 
+     * Renders the tablet speed multiplier field with range slider.
+     * 
+     * @since 1.2.7
+     */
+    public function tablet_speed_multiplier_callback() {
+        $settings = $this->get_settings();
+        $multiplier = $settings['tablet_speed_multiplier'];
+        echo '<div class="ca-banner-form-group">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        echo '<input type="range" name="' . self::OPTION_NAME . '[tablet_speed_multiplier]" id="banner_tablet_speed_multiplier" class="ca-banner-range" value="' . esc_attr($multiplier) . '" min="0.1" max="2.0" step="0.1" oninput="document.getElementById(\'tablet-speed-multiplier-value\').textContent = this.value + \'x\'">';
+        echo '<span class="ca-banner-range-value" id="tablet-speed-multiplier-value">' . esc_attr($multiplier) . 'x</span>';
+        echo '</div>';
+        echo '<p class="description">Speed multiplier for tablet devices (769px-1024px). 0.5x = half the base speed (faster), 2.0x = double the base speed (slower).</p>';
         echo '</div>';
     }
     

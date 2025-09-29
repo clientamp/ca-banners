@@ -61,8 +61,7 @@ body .ca-banner-container .ca-banner-content {
     padding-right: 20px !important;
     will-change: transform !important;
     min-width: 200px !important;
-    /* Default duration - will be overridden by JavaScript */
-    animation-duration: 60s;
+    /* Duration set by JavaScript for responsive speed */
     z-index: 1 !important;
 }
 

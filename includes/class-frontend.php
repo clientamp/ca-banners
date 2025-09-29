@@ -46,7 +46,12 @@ class CA_Banners_Frontend {
         // Always enqueue CSS to ensure it's available with cache busting
         wp_enqueue_style('ca-banners-frontend', CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/' . CA_Banners_Constants::DIR_CSS . '/' . CA_Banners_Constants::CSS_FILE_EXTENSION, array(), CA_BANNERS_VERSION . '-' . time() . '-fix-duplicate');
         // Load shared JavaScript for banner creation
-        wp_enqueue_script('ca-banners-shared', CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/js/ca-banners-shared.js', array(), CA_BANNERS_VERSION, true);
+        wp_enqueue_script('ca-banners-shared', CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/js/ca-banners-shared.js', array(), CA_BANNERS_VERSION . '-' . time(), true);
+        
+        // Debug: Check if scripts are being enqueued
+        if (defined('WP_DEBUG') && WP_DEBUG && current_user_can('view_ca_banners')) {
+            error_log('CA Banners: Scripts enqueued - CSS: ' . CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/' . CA_Banners_Constants::DIR_CSS . '/' . CA_Banners_Constants::CSS_FILE_EXTENSION . ', JS: ' . CA_BANNERS_PLUGIN_URL . CA_Banners_Constants::DIR_PUBLIC . '/js/ca-banners-shared.js');
+        }
     }
     
     /**
@@ -103,6 +108,8 @@ class CA_Banners_Frontend {
             $message = $validated_settings['message'];
             $repeat = $validated_settings['repeat'];
             $speed = $validated_settings['speed'];
+            $mobile_speed_multiplier = $validated_settings['mobile_speed_multiplier'];
+            $tablet_speed_multiplier = $validated_settings['tablet_speed_multiplier'];
             $background_color = $validated_settings['background_color'];
             $text_color = $validated_settings['text_color'];
         $font_size = $validated_settings['font_size'];
@@ -197,7 +204,7 @@ class CA_Banners_Frontend {
             } else {
                 // Cache miss - generate and cache HTML
                 ob_start();
-                $this->render_banner_script($message, $repeat, $speed, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date, $button_enabled, $button_text, $button_link, $button_color, $button_text_color, $button_border_width, $button_border_color, $button_border_radius, $button_padding, $button_font_size, $button_font_weight, $sticky, $button_lock_enabled, $button_lock_position, $vertical_padding, $button_new_window, $link_color, $button_margin_left, $button_margin_right);
+                $this->render_banner_script($message, $repeat, $speed, $mobile_speed_multiplier, $tablet_speed_multiplier, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date, $button_enabled, $button_text, $button_link, $button_color, $button_text_color, $button_border_width, $button_border_color, $button_border_radius, $button_padding, $button_font_size, $button_font_weight, $sticky, $button_lock_enabled, $button_lock_position, $vertical_padding, $button_new_window, $link_color, $button_margin_left, $button_margin_right);
                 $banner_html = ob_get_clean();
                 
                 // Cache the generated HTML
@@ -258,6 +265,8 @@ class CA_Banners_Frontend {
             'message' => $settings['message'] ?? '',
             'repeat' => $settings['repeat'] ?? 10,
             'speed' => $settings['speed'] ?? 60,
+            'mobile_speed_multiplier' => $settings['mobile_speed_multiplier'] ?? 0.5,
+            'tablet_speed_multiplier' => $settings['tablet_speed_multiplier'] ?? 0.75,
             'background_color' => $settings['background_color'] ?? '#729946',
             'text_color' => $settings['text_color'] ?? '#000000',
             'font_size' => $settings['font_size'] ?? 16,
@@ -334,6 +343,8 @@ class CA_Banners_Frontend {
         $message = $settings['message'];
         $repeat = isset($settings['repeat']) ? intval($settings['repeat']) : 10;
         $speed = isset($settings['speed']) ? intval($settings['speed']) : 60;
+        $mobile_speed_multiplier = isset($settings['mobile_speed_multiplier']) ? floatval($settings['mobile_speed_multiplier']) : 0.5;
+        $tablet_speed_multiplier = isset($settings['tablet_speed_multiplier']) ? floatval($settings['tablet_speed_multiplier']) : 0.75;
         $background_color = isset($settings['background_color']) ? $settings['background_color'] : '#729946';
         $text_color = isset($settings['text_color']) ? $settings['text_color'] : '#000000';
         $font_size = isset($settings['font_size']) ? intval($settings['font_size']) : 16;
@@ -365,6 +376,8 @@ class CA_Banners_Frontend {
         echo 'message: ' . wp_json_encode($single_message) . ',';
         echo 'repeat: ' . $repeat . ',';
         echo 'speed: ' . intval($speed ?: 60) . ',';
+        echo 'mobileSpeedMultiplier: ' . floatval($mobile_speed_multiplier ?: 0.5) . ',';
+        echo 'tabletSpeedMultiplier: ' . floatval($tablet_speed_multiplier ?: 0.75) . ',';
         echo 'backgroundColor: "' . esc_js($background_color) . '",';
         echo 'textColor: "' . esc_js($text_color) . '",';
         echo 'fontSize: ' . intval($font_size ?: 16) . ',';
@@ -521,14 +534,39 @@ class CA_Banners_Frontend {
                     }
                 }
                 
-                // Apply CSS animation for scrolling effect - Match admin preview exactly
-                var speed = caBannerConfig.speed || 60;
-                messageContainer.style.animationDuration = speed + 's';
+                // Apply CSS animation for scrolling effect with responsive speed
+                var baseSpeed = caBannerConfig.speed || 60;
+                var mobileMultiplier = caBannerConfig.mobileSpeedMultiplier || 0.5;
+                var tabletMultiplier = caBannerConfig.tabletSpeedMultiplier || 0.75;
+                
+                // Determine device type and apply appropriate speed multiplier
+                var isMobile = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+                var isTablet = window.matchMedia && window.matchMedia("(min-width: 769px) and (max-width: 1024px)").matches;
+                
+                var finalSpeed = baseSpeed;
+                if (isMobile) {
+                    finalSpeed = baseSpeed * mobileMultiplier;
+                } else if (isTablet) {
+                    finalSpeed = baseSpeed * tabletMultiplier;
+                }
+                
+                // Debug logging
+                // Applied responsive banner speed calculation (Method 1)
+                
+                messageContainer.style.animation = 'ca-banner-preview-scroll ' + finalSpeed + 's linear infinite';
                 messageContainer.style.display = 'inline-block';
                 messageContainer.style.whiteSpace = 'nowrap';
                 messageContainer.style.paddingRight = '20px';
                 messageContainer.style.willChange = 'transform';
                 messageContainer.style.minWidth = '200px';
+                
+                // Add resize listener for responsive speed updates
+                messageContainer.setAttribute('data-banner-config', JSON.stringify(caBannerConfig));
+                window.addEventListener('resize', function() {
+                    if (typeof caBannerUpdateSpeed === 'function') {
+                        caBannerUpdateSpeed(messageContainer, caBannerConfig);
+                    }
+                });
                 
                 bannerContent.appendChild(messageContainer);
                 if (buttonAppended) {
@@ -591,8 +629,16 @@ class CA_Banners_Frontend {
                     document.head.appendChild(style);
                 }
                 
-                // Apply animation duration directly to the message container - Match preview exactly
-                messageContainer.style.animation = 'ca-banner-preview-scroll ' + caBannerConfig.speed + 's linear infinite';
+                // DISABLED METHOD 2 - Prevent conflicting animation speeds - Method 1 handles this
+                // Method 2 disabled to prevent speed conflicts
+                
+                // Add resize listener for responsive speed updates
+                messageContainer.setAttribute('data-banner-config', JSON.stringify(caBannerConfig));
+                window.addEventListener('resize', function() {
+                    if (typeof caBannerUpdateSpeed === 'function') {
+                        caBannerUpdateSpeed(messageContainer, caBannerConfig);
+                    }
+                });
                 
                 banner.appendChild(bannerContent);
                 
@@ -668,12 +714,14 @@ class CA_Banners_Frontend {
      * @param int $button_margin_left Left margin for fixed buttons
      * @param int $button_margin_right Right margin for fixed buttons
      */
-    private function render_banner_script($message, $repeat, $speed, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date, $button_enabled, $button_text, $button_link, $button_color, $button_text_color, $button_border_width, $button_border_color, $button_border_radius, $button_padding, $button_font_size, $button_font_weight, $sticky, $button_lock_enabled, $button_lock_position, $vertical_padding, $button_new_window, $link_color, $button_margin_left, $button_margin_right) {
+    private function render_banner_script($message, $repeat, $speed, $mobile_speed_multiplier, $tablet_speed_multiplier, $background_color, $text_color, $font_size, $font_family, $font_weight, $border_width, $border_style, $border_color, $disable_mobile, $start_date, $end_date, $image, $image_start_date, $image_end_date, $button_enabled, $button_text, $button_link, $button_color, $button_text_color, $button_border_width, $button_border_color, $button_border_radius, $button_padding, $button_font_size, $button_font_weight, $sticky, $button_lock_enabled, $button_lock_position, $vertical_padding, $button_new_window, $link_color, $button_margin_left, $button_margin_right) {
         echo '<script>';
         echo 'var caBannerConfig = {';
         echo 'message: ' . wp_json_encode(trim(str_replace(["\r\n", "\r", "\n"], ' ', $message))) . ',';
         echo 'repeat: ' . intval($repeat) . ',';
         echo 'speed: ' . intval($speed ?: 60) . ',';
+        echo 'mobileSpeedMultiplier: ' . floatval($mobile_speed_multiplier ?: 0.5) . ',';
+        echo 'tabletSpeedMultiplier: ' . floatval($tablet_speed_multiplier ?: 0.75) . ',';
         echo 'backgroundColor: "' . esc_js($background_color) . '",';
         echo 'textColor: "' . esc_js($text_color) . '",';
         echo 'fontSize: ' . intval($font_size ?: 16) . ',';
@@ -886,15 +934,23 @@ class CA_Banners_Frontend {
                         }
                     }
                     
-                    // Apply CSS animation for scrolling effect - Match admin preview exactly
-                    var speed = config.speed || 60;
-                    messageContainer.style.animation = 'ca-banner-preview-scroll ' + speed + 's linear infinite';
-                    messageContainer.style.display = 'inline-block';
-                    messageContainer.style.whiteSpace = 'nowrap';
-                    messageContainer.style.paddingRight = '20px';
-                    messageContainer.style.willChange = 'transform';
-                    messageContainer.style.minWidth = '200px';
-                    messageContainer.style.zIndex = '1 !important';
+                    // DISABLED METHOD 3 - Prevent conflicting animation speeds - Method 1 handles this
+                    // Method 3 disabled to prevent speed conflicts
+                
+                // Add resize listener for responsive speed updates
+                messageContainer.setAttribute('data-banner-config', JSON.stringify(config));
+                window.addEventListener('resize', function() {
+                    if (typeof caBannerUpdateSpeed === 'function') {
+                        caBannerUpdateSpeed(messageContainer, config);
+                    }
+                });
+                
+                messageContainer.style.display = 'inline-block';
+                messageContainer.style.whiteSpace = 'nowrap';
+                messageContainer.style.paddingRight = '20px';
+                messageContainer.style.willChange = 'transform';
+                messageContainer.style.minWidth = '200px';
+                messageContainer.style.zIndex = '1 !important';
                     
                     bannerContent.appendChild(messageContainer);
                     if (buttonAppended) {
@@ -957,8 +1013,23 @@ class CA_Banners_Frontend {
                         document.head.appendChild(style);
                     }
                     
-                // Apply animation duration directly to the message container - Match preview exactly
-                messageContainer.style.animation = 'ca-banner-preview-scroll ' + (config.speed || 60) + 's linear infinite';
+                // Apply responsive animation speed (not hardcoded base speed)
+                var baseSpeed = config.speed || 60;
+                var mobileMultiplier = config.mobileSpeedMultiplier || 0.5;
+                var tabletMultiplier = config.tabletSpeedMultiplier || 0.75;
+                
+                var isMobile = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+                var isTablet = window.matchMedia && window.matchMedia("(min-width: 769px) and (max-width: 1024px)").matches;
+                
+                var finalSpeed = baseSpeed;
+                if (isMobile) {
+                    finalSpeed = baseSpeed * mobileMultiplier;
+                } else if (isTablet) {
+                    finalSpeed = baseSpeed * tabletMultiplier;
+                }
+                
+                messageContainer.style.animation = 'ca-banner-preview-scroll ' + finalSpeed + 's linear infinite';
+                // Applied responsive animation speed
                     
                     // Add animation class
                     bannerContent.classList.add('ca-banner-content');

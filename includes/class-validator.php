@@ -278,6 +278,32 @@ class CA_Banners_Validator {
     }
     
     /**
+     * Validate and sanitize float values with enhanced validation
+     *
+     * @param mixed $value Raw value to validate
+     * @param float $min Minimum allowed value
+     * @param float $max Maximum allowed value
+     * @param float $default Default value if invalid
+     * @return float Validated float value
+     */
+    private function validate_float($value, $min, $max, $default) {
+        // Convert to float
+        $value = floatval($value);
+        
+        // Check for valid numeric range
+        if ($value < $min || $value > $max) {
+            return $default;
+        }
+        
+        // Check for NaN or infinite values
+        if (!is_finite($value)) {
+            return $default;
+        }
+        
+        return $value;
+    }
+    
+    /**
      * Validate and sanitize color values with enhanced validation
      *
      * @param string $color Raw color value
@@ -511,6 +537,8 @@ class CA_Banners_Validator {
             $validated['message'] = isset($input['message']) ? $this->validate_html_content($input['message']) : '';
             $validated['repeat'] = $this->validate_numeric($input['repeat'] ?? CA_Banners_Constants::DEFAULT_REPEAT, CA_Banners_Constants::MIN_REPEAT_VALUE, CA_Banners_Constants::MAX_REPEAT_VALUE, CA_Banners_Constants::DEFAULT_REPEAT);
             $validated['speed'] = $this->validate_numeric($input['speed'] ?? CA_Banners_Constants::DEFAULT_SPEED, CA_Banners_Constants::MIN_SPEED_VALUE, CA_Banners_Constants::MAX_SPEED_VALUE, CA_Banners_Constants::DEFAULT_SPEED);
+            $validated['mobile_speed_multiplier'] = $this->validate_float($input['mobile_speed_multiplier'] ?? CA_Banners_Constants::DEFAULT_MOBILE_SPEED_MULTIPLIER, CA_Banners_Constants::MIN_SPEED_MULTIPLIER, CA_Banners_Constants::MAX_SPEED_MULTIPLIER, CA_Banners_Constants::DEFAULT_MOBILE_SPEED_MULTIPLIER);
+            $validated['tablet_speed_multiplier'] = $this->validate_float($input['tablet_speed_multiplier'] ?? CA_Banners_Constants::DEFAULT_TABLET_SPEED_MULTIPLIER, CA_Banners_Constants::MIN_SPEED_MULTIPLIER, CA_Banners_Constants::MAX_SPEED_MULTIPLIER, CA_Banners_Constants::DEFAULT_TABLET_SPEED_MULTIPLIER);
             $validated['font_size'] = $this->validate_numeric($input['font_size'] ?? CA_Banners_Constants::DEFAULT_FONT_SIZE, CA_Banners_Constants::MIN_FONT_SIZE, CA_Banners_Constants::MAX_FONT_SIZE, CA_Banners_Constants::DEFAULT_FONT_SIZE);
             $validated['border_width'] = $this->validate_numeric($input['border_width'] ?? CA_Banners_Constants::DEFAULT_BORDER_WIDTH, CA_Banners_Constants::MIN_BORDER_WIDTH, CA_Banners_Constants::MAX_BORDER_WIDTH, CA_Banners_Constants::DEFAULT_BORDER_WIDTH);
             

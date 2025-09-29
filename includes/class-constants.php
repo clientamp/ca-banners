@@ -26,7 +26,7 @@ class CA_Banners_Constants {
     /**
      * Plugin version
      */
-    const PLUGIN_VERSION = '1.1.1';
+    const PLUGIN_VERSION = '1.2.0';
     
     /**
      * Plugin text domain
@@ -54,6 +54,8 @@ class CA_Banners_Constants {
     const DEFAULT_MESSAGE = '';
     const DEFAULT_REPEAT = 10;
     const DEFAULT_SPEED = 60;
+    const DEFAULT_MOBILE_SPEED_MULTIPLIER = 0.5;
+    const DEFAULT_TABLET_SPEED_MULTIPLIER = 0.75;
     const DEFAULT_BACKGROUND_COLOR = '#729946';
     const DEFAULT_TEXT_COLOR = '#000000';
     const DEFAULT_FONT_SIZE = 16;
@@ -110,6 +112,8 @@ class CA_Banners_Constants {
     const MAX_REPEAT_VALUE = 100;
     const MIN_SPEED_VALUE = 10;
     const MAX_SPEED_VALUE = 100;
+    const MIN_SPEED_MULTIPLIER = 0.1;
+    const MAX_SPEED_MULTIPLIER = 2.0;
     const MIN_FONT_SIZE = 10;
     const MAX_FONT_SIZE = 40;
     const MIN_BORDER_WIDTH = 0;
@@ -456,6 +460,8 @@ class CA_Banners_Constants {
             'message' => self::DEFAULT_MESSAGE,
             'repeat' => self::DEFAULT_REPEAT,
             'speed' => self::DEFAULT_SPEED,
+            'mobile_speed_multiplier' => self::DEFAULT_MOBILE_SPEED_MULTIPLIER,
+            'tablet_speed_multiplier' => self::DEFAULT_TABLET_SPEED_MULTIPLIER,
             'background_color' => self::DEFAULT_BACKGROUND_COLOR,
             'text_color' => self::DEFAULT_TEXT_COLOR,
             'font_size' => self::DEFAULT_FONT_SIZE,
@@ -527,6 +533,8 @@ class CA_Banners_Constants {
         return array(
             'repeat' => array('min' => self::MIN_REPEAT_VALUE, 'max' => self::MAX_REPEAT_VALUE, 'default' => self::DEFAULT_REPEAT),
             'speed' => array('min' => self::MIN_SPEED_VALUE, 'max' => self::MAX_SPEED_VALUE, 'default' => self::DEFAULT_SPEED),
+            'mobile_speed_multiplier' => array('min' => self::MIN_SPEED_MULTIPLIER, 'max' => self::MAX_SPEED_MULTIPLIER, 'default' => self::DEFAULT_MOBILE_SPEED_MULTIPLIER),
+            'tablet_speed_multiplier' => array('min' => self::MIN_SPEED_MULTIPLIER, 'max' => self::MAX_SPEED_MULTIPLIER, 'default' => self::DEFAULT_TABLET_SPEED_MULTIPLIER),
             'font_size' => array('min' => self::MIN_FONT_SIZE, 'max' => self::MAX_FONT_SIZE, 'default' => self::DEFAULT_FONT_SIZE),
             'border_width' => array('min' => self::MIN_BORDER_WIDTH, 'max' => self::MAX_BORDER_WIDTH, 'default' => self::DEFAULT_BORDER_WIDTH),
             'button_border_width' => array('min' => self::MIN_BUTTON_BORDER_WIDTH, 'max' => self::MAX_BUTTON_BORDER_WIDTH, 'default' => self::DEFAULT_BUTTON_BORDER_WIDTH),

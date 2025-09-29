@@ -3,6 +3,17 @@
  * Contains the exact banner creation logic used by both frontend and admin preview
  */
 
+// CA Banners shared JavaScript loaded
+
+// Debug: Check for banner config after 1 second
+setTimeout(function() {
+    if (typeof caBannerConfig !== 'undefined') {
+        // caBannerConfig loaded
+    } else {
+            console.log('caBannerConfig not found - banner may be disabled or not configured');
+    }
+}, 1000);
+
 // HTML sanitization function to prevent XSS (shared between frontend and admin)
 function caBannerSanitizeHtml(html) {
     const allowedTags = ['strong', 'em', 'b', 'i', 'span', 'br', 'a'];
@@ -36,10 +47,46 @@ function caBannerSanitizeHtml(html) {
     return doc.body.innerHTML.replace(/&amp;nbsp;/g, '&nbsp;');
 }
 
+// Function to update banner speed based on current screen size
+var caBannerLastUpdate = 0;
+function caBannerUpdateSpeed(element, config) {
+    if (!element || !config) return;
+    
+    // Throttle updates to prevent excessive recalculations (max once per 100ms)
+    var now = Date.now();
+    if (now - caBannerLastUpdate < 100) {
+        return;
+    }
+    caBannerLastUpdate = now;
+    
+    var baseSpeed = config.speed || 60;
+    var mobileMultiplier = config.mobileSpeedMultiplier || 0.5;
+    var tabletMultiplier = config.tabletSpeedMultiplier || 0.75;
+    
+    // Determine device type and apply appropriate speed multiplier
+    var isMobile = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+    var isTablet = window.matchMedia && window.matchMedia("(min-width: 769px) and (max-width: 1024px)").matches;
+    
+    var finalSpeed = baseSpeed;
+    if (isMobile) {
+        finalSpeed = baseSpeed * mobileMultiplier;
+    } else if (isTablet) {
+        finalSpeed = baseSpeed * tabletMultiplier;
+    }
+    
+    // Apply the new animation speed
+    element.style.animation = 'ca-banner-preview-scroll ' + finalSpeed + 's linear infinite';
+    
+    // Speed updated responsively - throttled to prevent excessive updates
+}
+
 // Create banner using EXACT same logic for both frontend and admin preview
 function caBannerCreateBanner(config, container) {
+    // Creating banner with config
+    
     // Check if banner already exists
     if (container.querySelector('.ca-banner-container')) {
+        // Banner already exists
         return;
     }
 
@@ -139,9 +186,39 @@ function caBannerCreateBanner(config, container) {
         }
     }
     
-    // Apply CSS animation for scrolling effect
-    var speed = config.speed || 60;
-    messageContainer.style.animation = 'ca-banner-preview-scroll ' + speed + 's linear infinite';
+    // Apply CSS animation for scrolling effect with responsive speed
+    var baseSpeed = config.speed || 60;
+    var mobileMultiplier = config.mobileSpeedMultiplier || 0.5;
+    var tabletMultiplier = config.tabletSpeedMultiplier || 0.75;
+    
+    // Determine device type and apply appropriate speed multiplier
+    var isMobile = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+    var isTablet = window.matchMedia && window.matchMedia("(min-width: 769px) and (max-width: 1024px)").matches;
+    
+    var finalSpeed = baseSpeed;
+    if (isMobile) {
+        finalSpeed = baseSpeed * mobileMultiplier;
+    } else if (isTablet) {
+        finalSpeed = baseSpeed * tabletMultiplier;
+    }
+    
+    // Debug logging (remove in production)
+    if (typeof console !== 'undefined' && console.log) {
+        console.log('CA Banners Speed Debug:', {
+            baseSpeed: baseSpeed,
+            mobileMultiplier: mobileMultiplier,
+            tabletMultiplier: tabletMultiplier,
+            windowWidth: window.innerWidth,
+            isMobile: isMobile,
+            isTablet: isTablet,
+            finalSpeed: finalSpeed,
+            hasMatchMedia: !!window.matchMedia,
+            configKeys: Object.keys(config),
+            rawConfig: config
+        });
+    }
+    
+    messageContainer.style.animation = 'ca-banner-preview-scroll ' + finalSpeed + 's linear infinite';
     messageContainer.style.display = 'inline-block';
     messageContainer.style.whiteSpace = 'nowrap';
     messageContainer.style.paddingRight = '20px';
@@ -185,8 +262,23 @@ function caBannerCreateBanner(config, container) {
         document.head.appendChild(style);
     }
         
-    // Apply animation duration directly to the message container
-    messageContainer.style.animation = 'ca-banner-preview-scroll ' + (config.speed || 60) + 's linear infinite';
+    // Apply responsive animation speed (not hardcoded base speed)
+    var baseSpeed = config.speed || 60;
+    var mobileMultiplier = config.mobileSpeedMultiplier || 0.5;
+    var tabletMultiplier = config.tabletSpeedMultiplier || 0.75;
+    
+    var isMobile = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+    var isTablet = window.matchMedia && window.matchMedia("(min-width: 769px) and (max-width: 1024px)").matches;
+    
+    var finalSpeed = baseSpeed;
+    if (isMobile) {
+        finalSpeed = baseSpeed * mobileMultiplier;
+    } else if (isTablet) {
+        finalSpeed = baseSpeed * tabletMultiplier;
+    }
+    
+    messageContainer.style.animation = 'ca-banner-preview-scroll ' + finalSpeed + 's linear infinite';
+    // Applied responsive speed calculation
         
     // Add animation class
     bannerContent.classList.add('ca-banner-content');

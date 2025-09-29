@@ -202,11 +202,17 @@ function updatePreview() {
         const previewContent = document.getElementById('ca-banner-preview-content');
         previewContent.innerHTML = '';
         
+        // Get speed multipliers
+        const mobileSpeedMultiplier = parseFloat(document.getElementById('banner_mobile_speed_multiplier')?.value || 0.5);
+        const tabletSpeedMultiplier = parseFloat(document.getElementById('banner_tablet_speed_multiplier')?.value || 0.75);
+        
         // Create banner using EXACT same shared function as frontend
         caBannerCreateBanner({
             message: sanitizedMessage,
             repeat: parseInt(repeat),
             speed: parseInt(speed),
+            mobileSpeedMultiplier: mobileSpeedMultiplier,
+            tabletSpeedMultiplier: tabletSpeedMultiplier,
             backgroundColor: backgroundColor,
             textColor: textColor,
             fontSize: parseInt(fontSize),
@@ -252,7 +258,9 @@ const previewInputs = [
     'banner_font_family',
     'banner_font_weight',
     'banner_repeat',
-    'banner_speed'
+    'banner_speed',
+    'banner_mobile_speed_multiplier',
+    'banner_tablet_speed_multiplier'
 ];
 
 // Add button field listeners

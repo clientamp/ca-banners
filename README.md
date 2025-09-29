@@ -98,7 +98,7 @@ A professional WordPress plugin that displays customizable scrolling banners wit
 
 ## Technical Details
 
-- **Version**: 1.1
+- **Version**: 1.2
 - **Author**: clientamp
 - **Requires**: WordPress 4.0+
 - **Tested up to**: WordPress 6.4
@@ -126,6 +126,15 @@ For support and feature requests, please contact [clientamp.com](https://clienta
 - Enhanced admin interface
 - Added HTML/CSS support
 - Improved mobile compatibility
+
+### Version 1.2.0
+
+**🎯 Responsive Speed Control**
+- Mobile speed multiplier: Adjust banner scroll speed for mobile devices (≤768px)
+- Tablet speed multiplier: Adjust banner scroll speed for tablets (769-1024px)  
+- Desktop speed multiplier: Full speed for desktop (>1024px)
+- Automatic detection: Speed adjusts instantly when resizing browser
+- Perfect for mobile UX: Faster scrolling on smaller screens where 20s animations feel sluggish
 
 ### Version 1.1
 - Added sitewide display option
